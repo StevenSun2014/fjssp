@@ -93,53 +93,57 @@ class entry
 class GA
 {
 	int dnaLen = 0;
-	public BestSolution solve(ParameterInput para, ProblemInput input)
+	public BestSolution solve(ParameterInput para, ProblemInputII input)
 	{
 		Random generator = new Random();
 		// start time
 		long startTime = System.currentTimeMillis();
 		int k = 0;
-		entry[] entries = new entry[input.jobCount];// 工种数目
-		for (int q = 0; q < input.jobCount; q++)
+		int jobCount=input.getJobCount();
+		entry[] entries = new entry[jobCount];// 工种数目
+		for (int q = 0; q < jobCount; q++)
 		{
 			entries[q] = new entry();
 		}
-		int totalOperationCount = 0;// 总工序数
+		int totalOperationCount = input.getMaxOperationCount();// 总工序数
+		int[][] operationToIndex= input.getOperationToIndex();
 		int i = 0;
-		for (; i < input.jobCount; i++)
+		for (; i < jobCount; i++)
 		{
 			entries[i].index = i;
 			int operationCount = 0;
-			for (k = 0; k < input.operationCount; k++)
-			{//
-				if (input.machineNoMatrix[i][k] != -1)
-					operationCount++;
+			int start=operationToIndex[i][0];
+			int end=0;
+			if(i+1<jobCount)
+				end=operationToIndex[i+1][0]-1;
+			else {
+				end=totalOperationCount-1;
 			}
+			operationCount=end-start+1;
 			entries[i].value = operationCount;
-			totalOperationCount += operationCount;
+			//totalOperationCount += operationCount;
 		}
-		int dnaLength = totalOperationCount;// the length of DNA is equal to the
-		// totalOperationCount
-		this.dnaLen = totalOperationCount;
-		para.crossStart = generator.nextInt(this.dnaLen - 1);
-		int num = generator.nextInt(this.dnaLen);
-		while (para.crossStart + num > this.dnaLen - 1)
-			num = generator.nextInt(this.dnaLen);
-		para.crossEnd = para.crossStart + num;
+		int dnaLength = totalOperationCount*2;// the length of DNA is equal to the
+//		// totalOperationCount
+//		this.dnaLen = totalOperationCount;
+//		para.crossStart = generator.nextInt(this.dnaLen - 1);
+//		int num = generator.nextInt(this.dnaLen);
+//		while (para.crossStart + num > this.dnaLen - 1)
+//			num = generator.nextInt(this.dnaLen);
+//		para.crossEnd = para.crossStart + num;
 		int[][] dnaMatrix = new int[para.initialPopulationCount][dnaLength];
 		// generate all the DNAs
-		GenerateDNA.generateDNAs(input.jobCount, para.initialPopulationCount,
+		GenerateDNA.generateDNAs(jobCount, para.initialPopulationCount,
 				dnaMatrix, entries, dnaLength);
 		int[] fitness = new int[para.initialPopulationCount];
 		int minFitness = 0;
 		i = 0;
-		fitness[0] = CaculateFitness.evaluate(dnaMatrix[i], dnaLength, input);
+		fitness[0] = CaculateFitness.evaluate(dnaMatrix[i], input);
 		minFitness = fitness[0];
 		int minIndex = 0;
 		for (i = 1; i < para.initialPopulationCount; i++)
 		{
-			fitness[i] = CaculateFitness.evaluate(dnaMatrix[i], dnaLength,
-					input);
+			fitness[i] = CaculateFitness.evaluate(dnaMatrix[i],input);
 			if (fitness[i] < minFitness)
 			{
 				minFitness = fitness[i];
@@ -169,11 +173,9 @@ class GA
 						% (para.initialPopulationCount);
 				motherIndex = generator.nextInt(randomRange)
 						% (para.initialPopulationCount);
-				newDNAs[i] = GeneOperator.OXCrosserover(dnaMatrix[fatherIndex],
-						dnaMatrix[motherIndex], input, generator);
-				newDNAs[i + 1] = GeneOperator.OXCrosserover(
-						dnaMatrix[motherIndex], dnaMatrix[fatherIndex], input,
-						generator);
+				int matrix[][]=GeneOperator.fjsspCrossover(dnaMatrix[fatherIndex], dnaMatrix[motherIndex], input);
+				newDNAs[i] =matrix[0];
+				newDNAs[i + 1] = matrix[1];
 			}
 			// 基因突变
 			int mutationCount = (int) (crossCount * para.mutationRate);
@@ -188,7 +190,7 @@ class GA
 			}
 			int[] newFitness = new int[crossCount];
 			for (i = 0; i < crossCount; i++)
-				newFitness[i] = CaculateFitness.evaluate(newDNAs[i], dnaLength,
+				newFitness[i] = CaculateFitness.evaluate(newDNAs[i],
 						input);
 			int allLength = para.initialPopulationCount + crossCount;
 			int[] allFitness = new int[allLength];
@@ -226,13 +228,11 @@ class GA
 			}
 			for (int p = 0; p < para.initialPopulationCount; p++)
 				System.arraycopy(nextGen[p], 0, dnaMatrix[p], 0, dnaLength);
-			int latestMinFitness = CaculateFitness.evaluate(dnaMatrix[0],
-					dnaLength, input);
+			int latestMinFitness = CaculateFitness.evaluate(dnaMatrix[0],input);
 			int latestIndexMin = 0;
 			for (i = 1; i < para.initialPopulationCount; i++)
 			{
-				fitness[i] = CaculateFitness.evaluate(dnaMatrix[i], dnaLength,
-						input);
+				fitness[i] = CaculateFitness.evaluate(dnaMatrix[i],input);
 				if (fitness[i] < latestMinFitness)
 				{
 					latestMinFitness = fitness[i];

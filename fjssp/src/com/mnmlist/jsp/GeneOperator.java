@@ -140,6 +140,25 @@ public class GeneOperator {
 		}
 		return dnaCopy;
 	}
+	public static void fjsspMutation(ProblemInputII input,int []dna)
+	{
+		//the mutation of the operation sequence
+		int len=dna.length/2;
+		Random random=input.getRandom();
+		int posa=random.nextInt(len);
+		int posb=random.nextInt(len);
+		while(posa==posb)
+			posb=random.nextInt(len);
+		int temp=0;
+		if(posa>posb)
+		{
+			temp=posa;
+			posa=posb;
+			posb=temp;
+		}
+		operSeqMutation(dna,posa,posb);
+		//the mutation of the machine sequence
+	}
 	/**
 	 * @param dna one feasible solution
 	 * @param posa one mutation index

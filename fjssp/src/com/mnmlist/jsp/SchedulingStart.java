@@ -130,7 +130,7 @@ class SchedulingStart
 	 * @param input:the time and order information of the input matrix
 	 * @param para:the information of the scheduling problem,such as populationCount,crossoverRate,mutationRate
 	 */
-	public static void schedulingBegin(ProblemInput input, ParameterInput para)
+	public static void schedulingBegin(ProblemInputII input, ParameterInput para)
 	{
 		GA jsspProblem = new GA();
 		int currentBestChromesome[];
@@ -172,7 +172,6 @@ class SchedulingStart
 		for (int i = 0; i < jsspProblem.dnaLen; i++)
 			System.out.print(bestChromesome[i] + "\t");
 		System.out.println();
-		CaculateFitness.evaluatePrint(bestChromesome, bestChromesome.length,
-				input);
+		CaculateFitness.evaluatePrint(bestChromesome,input);
 	}
 }

@@ -46,14 +46,18 @@ public class CaculateFitness
 	 * @param input:the time and order information of the problem
 	 * @return the fitness of a sheduling
 	 */
-	public static int evaluate(int[] dna, int length, ProblemInput input)
+	public static int evaluate(int[] dna,ProblemInputII input)
 	{
+		int length=dna.length/2;
+		int jobCount=input.getJobCount();
+		int operCount=input.getMaxOperationCount();
+		int machineCount=input.getMachineCount();
 		int span = -1;
-		int[] operationIndexOfEachJob = new int[input.jobCount];// 工种数
-		int[] machineLastestFreeTime = new int[input.machineCount];// 机器数
-		Operation[][] gongjianGongxuOperationMatrix = new Operation[input.jobCount][input.operationCount];
-		for (int p = 0; p < input.jobCount; p++)
-			for (int q = 0; q < input.operationCount; q++)
+		int[] operationIndexOfEachJob = new int[jobCount];// 工种数
+		int[] machineLastestFreeTime = new int[machineCount];// 机器数
+		Operation[][] gongjianGongxuOperationMatrix = new Operation[jobCount][operCount];
+		for (int p = 0; p < jobCount; p++)
+			for (int q = 0; q < operCount; q++)
 				gongjianGongxuOperationMatrix[p][q] = new Operation();
 		int i = 0;
 		int gongjianName = 0;
@@ -64,8 +68,9 @@ public class CaculateFitness
 		{
 			gongjianName = dna[i];// 工件名
 			operationIndex = operationIndexOfEachJob[gongjianName]++;// 当前工件操作所在的工序数
-			operationTime = input.timeMatrix[gongjianName][operationIndex];// 某个工序所花费的时间
-			machineNo = input.machineNoMatrix[gongjianName][operationIndex];// 某个工序所在机器号
+			int machNoTimeArr[]=getMachineNoAndTime(input, dna, gongjianName, operationIndex);
+			machineNo=machNoTimeArr[0];
+			operationTime=machNoTimeArr[1];
 			if (operationIndex == 0)
 			{
 				gongjianGongxuOperationMatrix[gongjianName][operationIndex].jobNo = gongjianName;
@@ -102,18 +107,22 @@ public class CaculateFitness
 	 * @param input:the time and order information of the problem
 	 * @return the fitness of a sheduling
 	 */
-	public static int evaluatePrint(int[] dna, int length, ProblemInput input)
+	public static int evaluatePrint(int[] dna, ProblemInputII input)
 	{
+		int length=dna.length/2;
+		int jobCount=input.getJobCount();
+		int operCount=input.getMaxOperationCount();
+		int machineCount=input.getMachineCount();
 		StringBuilder jobNoBuilder = new StringBuilder();
 		StringBuilder machineNoBuilder = new StringBuilder();
 		StringBuilder startTimeBuilder = new StringBuilder();
 		StringBuilder endTimeBuilder = new StringBuilder();
 		int span = -1;
-		int[] operationIndexOfEachJob = new int[input.jobCount];
-		int[] machineLastestFreeTime = new int[input.machineCount];
-		Operation[][] gongjianGongxuOperationMatrix = new Operation[input.jobCount][input.operationCount];
-		for (int p = 0; p < input.jobCount; p++)
-			for (int q = 0; q < input.operationCount; q++)
+		int[] operationIndexOfEachJob = new int[jobCount];
+		int[] machineLastestFreeTime = new int[machineCount];
+		Operation[][] gongjianGongxuOperationMatrix = new Operation[jobCount][operCount];
+		for (int p = 0; p < jobCount; p++)
+			for (int q = 0; q < operCount; q++)
 				gongjianGongxuOperationMatrix[p][q] = new Operation();
 		// operation schedule[input->machineCount][input->jobCount];
 		int gongjianName = 0;
@@ -125,8 +134,9 @@ public class CaculateFitness
 		{
 			gongjianName = dna[i];
 			operationIndex = operationIndexOfEachJob[gongjianName]++;
-			operationTime = input.timeMatrix[gongjianName][operationIndex];
-			machineNo = input.machineNoMatrix[gongjianName][operationIndex];
+			int machNoTimeArr[]=getMachineNoAndTime(input, dna, gongjianName, operationIndex);
+			machineNo=machNoTimeArr[0];
+			operationTime=machNoTimeArr[1];
 			gongjianGongxuOperationMatrix[gongjianName][operationIndex].jobNo = gongjianName;
 			gongjianGongxuOperationMatrix[gongjianName][operationIndex].operationNo = operationIndex;
 			// gongjianGongxuOperationMatrix[gongjianName][operationIndex].machineNo
@@ -156,7 +166,7 @@ public class CaculateFitness
 			startTimeBuilder.append(start + " ");
 			endTimeBuilder.append(end - start + " ");
 		}
-		printSchedPicInConsole(input, gongjianGongxuOperationMatrix);
+		printSchedPicInConsole(input,dna, gongjianGongxuOperationMatrix);
 		// storeToDisk(machineNoBuilder, jobNoBuilder, startTimeBuilder,endTimeBuilder);
 		return span;
 
@@ -193,7 +203,7 @@ public class CaculateFitness
 	 * @param gongjianGongxuOperationMatrix:the handle process of the scheduling
 	 * problem,which will include operationNo,jobNo,startTime,endTime
 	 */
-	public static void printSchedPicInConsole(ProblemInput input,
+	public static void printSchedPicInConsole(ProblemInputII input,int []dna,
 			Operation[][] gongjianGongxuOperationMatrix)
 	{
 		int start = 0, end = 0, machineNo = 0;
@@ -202,22 +212,23 @@ public class CaculateFitness
 		Operation tempOperation = null;
 		int j = 0, p = 0, q = 0, i = 0;
 		char ch = 'a';
-		int machineCount = input.machineCount;
+		int machineCount = input.getMachineCount();
 		int colums = 2000;
 		char sheduleMatrix[][] = new char[machineCount][colums];
 		for (i = 0; i < machineCount; i++)
 			Arrays.fill(sheduleMatrix[i], ' ');
 		machineNo = 0;
-		for (p = 0; p < input.jobCount; p++)
+		int jobCount=input.getJobCount();
+		int operCount=input.getMaxOperationCount();
+		for (p = 0; p < jobCount; p++)
 		{
 			ch = flagString.charAt(p);// 每一个工件对应一种字符
-			for (q = 0; q < input.operationCount; q++)
+			for (q = 0; q < operCount; q++)
 			{
 				tempOperation = gongjianGongxuOperationMatrix[p][q];
 				start = tempOperation.startTime;
 				end = tempOperation.endTime;
-				machineNo = input.machineNoMatrix[p][q];// pay attention to it
-														// please
+				machineNo=getMachineNoAndTime(input,dna,p,q)[0];
 				if (machineNo == -1)
 					continue;
 				for (j = start; j < end; j++)
