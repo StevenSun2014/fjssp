@@ -1,5 +1,7 @@
 package com.mnmlist.jsp;
 
+import java.util.Random;
+
 public class ProblemInputII
 {
 	private int[] operationCountArr;
@@ -8,6 +10,16 @@ public class ProblemInputII
 	private int jobCount; // 作业数目
 	private int maxOperationCount = 0;
 	int[][] operationToIndex;// 某工件的某工序对应的index
+	Random random=new Random();
+	public Random getRandom()
+	{
+		return random;
+	}
+
+	public void setRandom(Random random)
+	{
+		this.random = random;
+	}
 
 	public int[] getOperationCountArr()
 	{
