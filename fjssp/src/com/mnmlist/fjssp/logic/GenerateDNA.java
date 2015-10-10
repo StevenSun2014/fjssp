@@ -1,6 +1,9 @@
-package com.mnmlist.jsp;
+package com.mnmlist.fjssp.logic;
 
 import java.util.Random;
+
+import com.mnmlist.fjssp.data.Entry;
+import com.mnmlist.fjssp.data.ProblemInputII;
 
 /**
  * @author mnmlist@163.com
@@ -11,7 +14,7 @@ public class GenerateDNA
 {
 
 	public static void fjsspGenerateOneDNA(ProblemInputII problemInputII, int[] dna,
-			entry[] entries)
+			Entry[] entries)
 	{
 		int jobCount=problemInputII.getJobCount();
 		int len=dna.length/2;
@@ -44,7 +47,7 @@ public class GenerateDNA
 	 *            include the jobNo and the procedureNo
 	 * @param dnaLength
 	 */
-	public static void generateOneDNA(int jobCount, int[] dna, entry[] entries,
+	public static void generateOneDNA(int jobCount, int[] dna, Entry[] entries,
 			int dnaLength)
 	{
 
@@ -79,14 +82,14 @@ public class GenerateDNA
 	 * @param dnaLength
 	 */
 	public static void generateDNAs(int jobCount, int populationSize,
-			int[][] dnaArray, entry[] entries, int dnaLength)
+			int[][] dnaArray, Entry[] entries, int dnaLength)
 	{
 		// entries 工种名及其对应的工序数
 		int i = 0;
-		entry[] tempEntries = new entry[jobCount];
+		Entry[] tempEntries = new Entry[jobCount];
 		for (int q = 0; q < jobCount; q++)
 		{
-			tempEntries[q] = new entry();
+			tempEntries[q] = new Entry();
 		}
 		for (; i < populationSize; i++)
 		{

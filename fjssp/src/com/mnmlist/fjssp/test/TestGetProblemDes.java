@@ -1,6 +1,9 @@
-package com.mnmlist.jsp;
+package com.mnmlist.fjssp.test;
 
 import java.io.File;
+
+import com.mnmlist.fjssp.data.ProblemInputII;
+import com.mnmlist.fjssp.logic.InitProblemDescription;
 
 public class TestGetProblemDes
 {

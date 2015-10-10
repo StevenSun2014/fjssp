@@ -1,4 +1,4 @@
-package com.mnmlist.jsp;
+package com.mnmlist.fjssp.data;
 
 import java.util.Random;
 
@@ -9,16 +9,46 @@ public class ProblemInputII
 	private int machineCount; // 机器数
 	private int jobCount; // 作业数目
 	private int maxOperationCount = 0;
-	int[][] operationToIndex;// 某工件的某工序对应的index
+	private int[][] operationToIndex;// 某工件的某工序对应的index
+	private double crossoverRate=0.9;
+	private double mutationRate=0.05;
+	private int populationCount=100;
+	private int iteratorCount=200;
+	private int timeLimit=-1;//no time limit
+	public int getTimeLimit()
+	{
+		return timeLimit;
+	}
+
+	public void setTimeLimit(int timeLimit)
+	{
+		this.timeLimit = timeLimit;
+	}
+
+	public int getPopulationCount()
+	{
+		return populationCount;
+	}
+
+	public int getIteratorCount()
+	{
+		return iteratorCount;
+	}
+
 	Random random=new Random();
+	public double getCrossoverRate()
+	{
+		return crossoverRate;
+	}
+
+	public double getMutationRate()
+	{
+		return mutationRate;
+	}
+
 	public Random getRandom()
 	{
 		return random;
-	}
-
-	public void setRandom(Random random)
-	{
-		this.random = random;
 	}
 
 	public int[] getOperationCountArr()

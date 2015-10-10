@@ -1,116 +1,39 @@
-package com.mnmlist.jsp;
+package com.mnmlist.fjssp.logic;
 
 import java.util.Random;
+
+import com.mnmlist.fjssp.data.BestSolution;
+import com.mnmlist.fjssp.data.Entry;
+import com.mnmlist.fjssp.data.ProblemInputII;
+import com.mnmlist.fjssp.lib.UtilLib;
 
 /**
  * @author mnmlist@163.com
  * @blog http://blog.csdn.net/mnmlist
  * @version v1.0
  */
-class ProblemInput
-{
-	int machineNoMatrix[][];// 机器号矩阵
-	int timeMatrix[][]; // 时间矩阵
-	int machineCount; // 机器数
-	int operationCount; // 操作数
-	int jobCount; // 作业数目
 
-	public ProblemInput(int gongzhongNum, int gongxuNum)
-	{
-		machineNoMatrix = new int[gongzhongNum][gongxuNum];
-		timeMatrix = new int[gongzhongNum][gongxuNum];
-		this.jobCount = gongzhongNum;
-		this.operationCount = gongxuNum;
-	}
-}
-
-class ParameterInput
-{
-	int initialPopulationCount;
-	double crossoverRate;
-	double mutationRate;
-	long timeLimit;
-	int iterationLimit;
-	int crossStart;
-	int crossEnd;
-}
-
-class Operation
-{
-	int jobNo;
-	int operationNo;
-	int startTime;
-	int endTime;
-
-	Operation()
-	{
-		jobNo = -1;
-		operationNo = -1;
-		startTime = -1;
-		endTime = -1;
-	}
-}
-
-class BestSolution
-{
-	private int[] bestChromesome;
-	private int minTime;
-
-	public BestSolution(int[] bestChromesome, int minTime)
-	{
-		this.bestChromesome = bestChromesome;
-		this.minTime = minTime;
-	}
-
-	public int[] getBestChromesome()
-	{
-		return bestChromesome;
-	}
-
-	public int getBestFitness()
-	{
-		return minTime;
-	}
-}
-
-// 查找某个工种对应的机器数目
-class entry
-{
-	int index;// 工种号 jobNo
-	int value;// 工序数 procedureNo
-
-	entry()
-	{
-		index = -1;
-		value = -1;
-	}
-}
-/**
- * @author mnmlist@163.com
- * @blog http://blog.csdn.net/mnmlist
- * @version 1.0
- */
 class GA
 {
 	int dnaLen = 0;
-	public BestSolution solve(ParameterInput para, ProblemInputII input)
+	public BestSolution solve( ProblemInputII input)
 	{
 		Random generator = new Random();
 		// start time
 		long startTime = System.currentTimeMillis();
 		int k = 0;
 		int jobCount=input.getJobCount();
-		entry[] entries = new entry[jobCount];// 工种数目
+		Entry[] entries = new Entry[jobCount];// 工种数目
 		for (int q = 0; q < jobCount; q++)
 		{
-			entries[q] = new entry();
+			entries[q] = new Entry();
 		}
 		int totalOperationCount = input.getMaxOperationCount();// 总工序数
 		int[][] operationToIndex= input.getOperationToIndex();
 		int i = 0;
 		for (; i < jobCount; i++)
 		{
-			entries[i].index = i;
+			entries[i].index=i;
 			int operationCount = 0;
 			int start=operationToIndex[i][0];
 			int end=0;
@@ -120,28 +43,22 @@ class GA
 				end=totalOperationCount-1;
 			}
 			operationCount=end-start+1;
-			entries[i].value = operationCount;
+			entries[i].value=operationCount;
 			//totalOperationCount += operationCount;
 		}
 		int dnaLength = totalOperationCount*2;// the length of DNA is equal to the
-//		// totalOperationCount
-//		this.dnaLen = totalOperationCount;
-//		para.crossStart = generator.nextInt(this.dnaLen - 1);
-//		int num = generator.nextInt(this.dnaLen);
-//		while (para.crossStart + num > this.dnaLen - 1)
-//			num = generator.nextInt(this.dnaLen);
-//		para.crossEnd = para.crossStart + num;
-		int[][] dnaMatrix = new int[para.initialPopulationCount][dnaLength];
+		int poputlationCount=input.getPopulationCount();
+		int[][] dnaMatrix = new int[poputlationCount][dnaLength];
 		// generate all the DNAs
-		GenerateDNA.generateDNAs(jobCount, para.initialPopulationCount,
+		GenerateDNA.generateDNAs(jobCount, poputlationCount,
 				dnaMatrix, entries, dnaLength);
-		int[] fitness = new int[para.initialPopulationCount];
+		int[] fitness = new int[poputlationCount];
 		int minFitness = 0;
 		i = 0;
 		fitness[0] = CaculateFitness.evaluate(dnaMatrix[i], input);
 		minFitness = fitness[0];
 		int minIndex = 0;
-		for (i = 1; i < para.initialPopulationCount; i++)
+		for (i = 1; i < poputlationCount; i++)
 		{
 			fitness[i] = CaculateFitness.evaluate(dnaMatrix[i],input);
 			if (fitness[i] < minFitness)
@@ -160,55 +77,56 @@ class GA
 		int posa = 0;
 		int posb = 0;
 		int min = 0;
-		while (!UtilLib.isEnd(para, count, (long) startTime))
+		double crossoverRate=input.getCrossoverRate();
+		while (!UtilLib.isEnd(input,count, (long) startTime))
 		{
 			// 基因重组
-			int crossCount = (int) (para.initialPopulationCount * para.crossoverRate);
+			int crossCount = (int) (poputlationCount * crossoverRate);
 			if ((crossCount & 1) == 1)
 				crossCount--;
 			int[][] newDNAs = new int[crossCount][dnaLength];
 			for (i = 0; i < crossCount; i += 2)
 			{
 				fatherIndex = generator.nextInt(randomRange)
-						% (para.initialPopulationCount);
+						% (poputlationCount);
 				motherIndex = generator.nextInt(randomRange)
-						% (para.initialPopulationCount);
+						% (poputlationCount);
 				int matrix[][]=GeneOperator.fjsspCrossover(dnaMatrix[fatherIndex], dnaMatrix[motherIndex], input);
 				newDNAs[i] =matrix[0];
 				newDNAs[i + 1] = matrix[1];
 			}
 			// 基因突变
-			int mutationCount = (int) (crossCount * para.mutationRate);
-			for (i = 0; i < mutationCount; i++)
-			{
-				index = generator.nextInt(randomRange) % crossCount;
-				posa = generator.nextInt(randomRange) % dnaLength;
-				posb = generator.nextInt(randomRange) % dnaLength;
-				min = posa < posb ? posa : posb;
-				GeneOperator.mutation(newDNAs[index], min, posa
-						+ posb - min);
-			}
+			double mutationRate=input.getMutationRate();
+			double randomNumber=0;
+			//for()
+//			int mutationCount = (int) (crossCount *mutationRate);
+//			for (i = 0; i < mutationCount; i++)
+//			{
+//				index = generator.nextInt(randomRange) % crossCount;
+//				posa = generator.nextInt(randomRange) % dnaLength;
+//				posb = generator.nextInt(randomRange) % dnaLength;
+//				min = posa < posb ? posa : posb;
+//				GeneOperator.mutation(newDNAs[index], min, posa
+//						+ posb - min);
+//			}
 			int[] newFitness = new int[crossCount];
 			for (i = 0; i < crossCount; i++)
 				newFitness[i] = CaculateFitness.evaluate(newDNAs[i],
 						input);
-			int allLength = para.initialPopulationCount + crossCount;
+			int allLength = poputlationCount + crossCount;
 			int[] allFitness = new int[allLength];
-			System.arraycopy(fitness, 0, allFitness, 0,
-					para.initialPopulationCount);
-			System.arraycopy(newFitness, 0, allFitness,
-					para.initialPopulationCount, crossCount);
+			System.arraycopy(fitness, 0, allFitness, 0,poputlationCount);
+			System.arraycopy(newFitness, 0, allFitness,poputlationCount, crossCount);
 			double[] allProbabilities = new double[allLength];
 			Selection.transformFitnessToDistribution(allFitness,
 					allProbabilities);
 			double start = (generator.nextInt(randomRange) % 100000) / 100000;
 			int[] perSelectCount = new int[allLength];
-			Selection.selection(allProbabilities, para.initialPopulationCount,
-					start, perSelectCount);
-			int[][] nextGen = new int[para.initialPopulationCount][dnaLength];
+			Selection.selection(allProbabilities, poputlationCount,start, perSelectCount);
+			int[][] nextGen = new int[poputlationCount][dnaLength];
 			index = 0;
 			int j = 0;
-			for (i = 0; i < para.initialPopulationCount; i++)
+			for (i = 0; i < poputlationCount; i++)
 			{
 				for (j = 0; j < perSelectCount[i]; j++)
 				{
@@ -219,18 +137,18 @@ class GA
 			}
 			for (i = 0; i < crossCount; i++)
 			{
-				for (j = 0; j < perSelectCount[i + para.initialPopulationCount]; j++)
+				for (j = 0; j < perSelectCount[i + poputlationCount]; j++)
 				{
 					System.arraycopy(newDNAs[i], 0, nextGen[index], 0,
 							dnaLength);
 					index++;
 				}
 			}
-			for (int p = 0; p < para.initialPopulationCount; p++)
+			for (int p = 0; p <poputlationCount; p++)
 				System.arraycopy(nextGen[p], 0, dnaMatrix[p], 0, dnaLength);
 			int latestMinFitness = CaculateFitness.evaluate(dnaMatrix[0],input);
 			int latestIndexMin = 0;
-			for (i = 1; i < para.initialPopulationCount; i++)
+			for (i = 1; i <poputlationCount; i++)
 			{
 				fitness[i] = CaculateFitness.evaluate(dnaMatrix[i],input);
 				if (fitness[i] < latestMinFitness)

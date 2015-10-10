@@ -1,6 +1,6 @@
-package com.mnmlist.jsp;
+package com.mnmlist.fjssp.lib;
 
-import java.util.Random;
+import com.mnmlist.fjssp.data.ProblemInputII;
 
 /**
  * @author mnmlist@163.com
@@ -18,15 +18,16 @@ public class UtilLib {
 	 * @param startTime
 	 * @return
 	 */
-	public static boolean isEnd(ParameterInput para, int k, long startTime) {
-		if (para.iterationLimit > 0) {
-			if (k >= para.iterationLimit) {
+	public static boolean isEnd(ProblemInputII input, int k, long startTime) {
+		int timeLimit=input.getTimeLimit();
+		if (timeLimit > 0) {
+			if (k >= input.getIteratorCount()) {
 				return true;
 			}
 		}
-		if (para.timeLimit > 0) {
+		if (timeLimit > 0) {
 			long t = System.currentTimeMillis();
-			if ((t - startTime) > para.timeLimit) {
+			if ((t - startTime) > timeLimit) {
 				return true;
 			}
 		}

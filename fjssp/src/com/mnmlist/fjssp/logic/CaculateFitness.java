@@ -1,10 +1,14 @@
-package com.mnmlist.jsp;
+package com.mnmlist.fjssp.logic;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Formatter;
+
+import com.mnmlist.fjssp.data.Operation;
+import com.mnmlist.fjssp.data.ProblemInputII;
+import com.mnmlist.fjssp.lib.UtilLib;
 
 /**
  * @author mnmlist@163.com
@@ -55,10 +59,10 @@ public class CaculateFitness
 		int span = -1;
 		int[] operationIndexOfEachJob = new int[jobCount];// 工种数
 		int[] machineLastestFreeTime = new int[machineCount];// 机器数
-		Operation[][] gongjianGongxuOperationMatrix = new Operation[jobCount][operCount];
+		Operation[][] jobOperMatrix = new Operation[jobCount][operCount];
 		for (int p = 0; p < jobCount; p++)
 			for (int q = 0; q < operCount; q++)
-				gongjianGongxuOperationMatrix[p][q] = new Operation();
+				jobOperMatrix[p][q] = new Operation();
 		int i = 0;
 		int gongjianName = 0;
 		int operationIndex = 0;
@@ -73,29 +77,29 @@ public class CaculateFitness
 			operationTime=machNoTimeArr[1];
 			if (operationIndex == 0)
 			{
-				gongjianGongxuOperationMatrix[gongjianName][operationIndex].jobNo = gongjianName;
-				gongjianGongxuOperationMatrix[gongjianName][operationIndex].operationNo = operationIndex;
-				// gongjianGongxuOperationMatrix[gongjianName][operationIndex].machineNo
+				jobOperMatrix[gongjianName][operationIndex].jobNo = gongjianName;
+				jobOperMatrix[gongjianName][operationIndex].operationNo = operationIndex;
+				// jobOperMatrix[gongjianName][operationIndex].machineNo
 				// = machineNo;
-				gongjianGongxuOperationMatrix[gongjianName][operationIndex].startTime = machineLastestFreeTime[machineNo];
-				gongjianGongxuOperationMatrix[gongjianName][operationIndex].endTime = gongjianGongxuOperationMatrix[gongjianName][operationIndex].startTime
+				jobOperMatrix[gongjianName][operationIndex].startTime = machineLastestFreeTime[machineNo];
+				jobOperMatrix[gongjianName][operationIndex].endTime = jobOperMatrix[gongjianName][operationIndex].startTime
 						+ operationTime;
 			} else
 			{
-				gongjianGongxuOperationMatrix[gongjianName][operationIndex].jobNo = gongjianName;
-				gongjianGongxuOperationMatrix[gongjianName][operationIndex].operationNo = operationIndex;
-				// gongjianGongxuOperationMatrix[gongjianName][operationIndex].machineNo
+				jobOperMatrix[gongjianName][operationIndex].jobNo = gongjianName;
+				jobOperMatrix[gongjianName][operationIndex].operationNo = operationIndex;
+				// jobOperMatrix[gongjianName][operationIndex].machineNo
 				// = machineNo;
-				gongjianGongxuOperationMatrix[gongjianName][operationIndex].startTime = UtilLib
-						.max(gongjianGongxuOperationMatrix[gongjianName][operationIndex - 1].endTime,
+				jobOperMatrix[gongjianName][operationIndex].startTime = UtilLib
+						.max(jobOperMatrix[gongjianName][operationIndex - 1].endTime,
 								machineLastestFreeTime[machineNo]);
-				gongjianGongxuOperationMatrix[gongjianName][operationIndex].endTime = gongjianGongxuOperationMatrix[gongjianName][operationIndex].startTime
+				jobOperMatrix[gongjianName][operationIndex].endTime = jobOperMatrix[gongjianName][operationIndex].startTime
 						+ operationTime;
 			}
-			machineLastestFreeTime[machineNo] = gongjianGongxuOperationMatrix[gongjianName][operationIndex].endTime;
-			if (gongjianGongxuOperationMatrix[gongjianName][operationIndex].endTime > span)
+			machineLastestFreeTime[machineNo] = jobOperMatrix[gongjianName][operationIndex].endTime;
+			if (jobOperMatrix[gongjianName][operationIndex].endTime > span)
 			{
-				span = gongjianGongxuOperationMatrix[gongjianName][operationIndex].endTime;
+				span = jobOperMatrix[gongjianName][operationIndex].endTime;
 			}
 		}
 
@@ -120,10 +124,10 @@ public class CaculateFitness
 		int span = -1;
 		int[] operationIndexOfEachJob = new int[jobCount];
 		int[] machineLastestFreeTime = new int[machineCount];
-		Operation[][] gongjianGongxuOperationMatrix = new Operation[jobCount][operCount];
+		Operation[][] jobOperMatrix = new Operation[jobCount][operCount];
 		for (int p = 0; p < jobCount; p++)
 			for (int q = 0; q < operCount; q++)
-				gongjianGongxuOperationMatrix[p][q] = new Operation();
+				jobOperMatrix[p][q] = new Operation();
 		// operation schedule[input->machineCount][input->jobCount];
 		int gongjianName = 0;
 		int operationIndex = 0;
@@ -137,24 +141,24 @@ public class CaculateFitness
 			int machNoTimeArr[]=getMachineNoAndTime(input, dna, gongjianName, operationIndex);
 			machineNo=machNoTimeArr[0];
 			operationTime=machNoTimeArr[1];
-			gongjianGongxuOperationMatrix[gongjianName][operationIndex].jobNo = gongjianName;
-			gongjianGongxuOperationMatrix[gongjianName][operationIndex].operationNo = operationIndex;
-			// gongjianGongxuOperationMatrix[gongjianName][operationIndex].machineNo
+			jobOperMatrix[gongjianName][operationIndex].jobNo = gongjianName;
+			jobOperMatrix[gongjianName][operationIndex].operationNo = operationIndex;
+			// jobOperMatrix[gongjianName][operationIndex].machineNo
 			// = machineNo;
 			if (operationIndex == 0)
 				start = machineLastestFreeTime[machineNo];
 			else
 				start = UtilLib
-						.max(gongjianGongxuOperationMatrix[gongjianName][operationIndex - 1].endTime,
+						.max(jobOperMatrix[gongjianName][operationIndex - 1].endTime,
 								machineLastestFreeTime[machineNo]);
-			gongjianGongxuOperationMatrix[gongjianName][operationIndex].startTime = start;
-			end = gongjianGongxuOperationMatrix[gongjianName][operationIndex].startTime
+			jobOperMatrix[gongjianName][operationIndex].startTime = start;
+			end = jobOperMatrix[gongjianName][operationIndex].startTime
 					+ operationTime;
-			gongjianGongxuOperationMatrix[gongjianName][operationIndex].endTime = end;
-			machineLastestFreeTime[machineNo] = gongjianGongxuOperationMatrix[gongjianName][operationIndex].endTime;
-			if (gongjianGongxuOperationMatrix[gongjianName][operationIndex].endTime > span)
+			jobOperMatrix[gongjianName][operationIndex].endTime = end;
+			machineLastestFreeTime[machineNo] = jobOperMatrix[gongjianName][operationIndex].endTime;
+			if (jobOperMatrix[gongjianName][operationIndex].endTime > span)
 			{
-				span = gongjianGongxuOperationMatrix[gongjianName][operationIndex].endTime;
+				span = jobOperMatrix[gongjianName][operationIndex].endTime;
 			}
 			System.out.print("Machine:" + (machineNo + 1) + "|Job:"
 					+ (gongjianName + 1) + "|Gongxu:" + (operationIndex + 1));
@@ -166,7 +170,7 @@ public class CaculateFitness
 			startTimeBuilder.append(start + " ");
 			endTimeBuilder.append(end - start + " ");
 		}
-		printSchedPicInConsole(input,dna, gongjianGongxuOperationMatrix);
+		printSchedPicInConsole(input,dna, jobOperMatrix);
 		// storeToDisk(machineNoBuilder, jobNoBuilder, startTimeBuilder,endTimeBuilder);
 		return span;
 
@@ -200,11 +204,11 @@ public class CaculateFitness
 
 	/**
 	 * @param input:the time and order information of the problem
-	 * @param gongjianGongxuOperationMatrix:the handle process of the scheduling
+	 * @param jobOperMatrix:the handle process of the scheduling
 	 * problem,which will include operationNo,jobNo,startTime,endTime
 	 */
 	public static void printSchedPicInConsole(ProblemInputII input,int []dna,
-			Operation[][] gongjianGongxuOperationMatrix)
+			Operation[][] jobOperMatrix)
 	{
 		int start = 0, end = 0, machineNo = 0;
 		String flagString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -225,7 +229,7 @@ public class CaculateFitness
 			ch = flagString.charAt(p);// 每一个工件对应一种字符
 			for (q = 0; q < operCount; q++)
 			{
-				tempOperation = gongjianGongxuOperationMatrix[p][q];
+				tempOperation = jobOperMatrix[p][q];
 				start = tempOperation.startTime;
 				end = tempOperation.endTime;
 				machineNo=getMachineNoAndTime(input,dna,p,q)[0];

@@ -1,4 +1,4 @@
-package com.mnmlist.jsp;
+package com.mnmlist.fjssp.logic;
 
 import java.util.Arrays;
 import java.util.BitSet;
