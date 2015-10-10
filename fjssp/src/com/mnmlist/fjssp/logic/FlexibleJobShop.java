@@ -13,22 +13,20 @@ import com.mnmlist.fjssp.lib.UtilLib;
  * @version v1.0
  */
 
-class GA
+public class FlexibleJobShop
 {
 	int dnaLen = 0;
 	public BestSolution solve( ProblemInputII input)
 	{
-		Random generator = new Random();
-		// start time
-		long startTime = System.currentTimeMillis();
-		int k = 0;
+		Random generator = input.getRandom();
+		long startTime = System.currentTimeMillis();// start time
 		int jobCount=input.getJobCount();
 		Entry[] entries = new Entry[jobCount];// 工种数目
 		for (int q = 0; q < jobCount; q++)
 		{
 			entries[q] = new Entry();
 		}
-		int totalOperationCount = input.getMaxOperationCount();// 总工序数
+		int totalOperationCount = input.getTotalOperationCount();// 总工序数
 		int[][] operationToIndex= input.getOperationToIndex();
 		int i = 0;
 		for (; i < jobCount; i++)
@@ -74,9 +72,6 @@ class GA
 		int fatherIndex = 0;
 		int motherIndex = 0;
 		int index = 0;
-		int posa = 0;
-		int posb = 0;
-		int min = 0;
 		double crossoverRate=input.getCrossoverRate();
 		while (!UtilLib.isEnd(input,count, (long) startTime))
 		{
@@ -96,8 +91,8 @@ class GA
 				newDNAs[i + 1] = matrix[1];
 			}
 			// 基因突变
-			double mutationRate=input.getMutationRate();
-			double randomNumber=0;
+//			double mutationRate=input.getMutationRate();
+//			double randomNumber=0;
 			//for()
 //			int mutationCount = (int) (crossCount *mutationRate);
 //			for (i = 0; i < mutationCount; i++)

@@ -301,6 +301,7 @@ public class InitProblemDescription
 			for (int i = 0; i < listSize; i++)
 				operationCountArr[i] = operationCountList.get(i);
 			problemInputII.setProDesMatrix(proDesMatrix);
+			problemInputII.setTotalOperationCount(proDesMatrix.length);
 			problemInputII.setOperationToIndex(operationToIndex);
 			problemInputII.setOperationCountArr(operationCountArr);
 			reader.close();

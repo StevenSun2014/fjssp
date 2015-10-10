@@ -2,7 +2,6 @@ package com.mnmlist.fjssp.logic;
 
 import java.util.Arrays;
 import java.util.BitSet;
-import java.util.Set;
 
 /**
  * @author mnmlist@163.com

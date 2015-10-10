@@ -4,12 +4,13 @@ import java.util.Random;
 
 public class ProblemInputII
 {
-	private int[] operationCountArr;
-	private int proDesMatrix[][];
-	private int machineCount; // 机器数
-	private int jobCount; // 作业数目
-	private int maxOperationCount = 0;
-	private int[][] operationToIndex;// 某工件的某工序对应的index
+	private int[] operationCountArr;//how many operations for every job
+	private int proDesMatrix[][];//the machine no and time for every operation
+	private int machineCount; // total machine count
+	private int jobCount; // total job count
+	private int maxOperationCount = 0;//the max operation count for the whole job
+	private int totalOperationCount=0;//the total operation count for the whole job
+	private int[][] operationToIndex;// the index of some operation of some job
 	private double crossoverRate=0.9;
 	private double mutationRate=0.05;
 	private int populationCount=100;
@@ -109,5 +110,15 @@ public class ProblemInputII
 	public void setJobCount(int jobCount)
 	{
 		this.jobCount = jobCount;
+	}
+
+	public int getTotalOperationCount()
+	{
+		return totalOperationCount;
+	}
+
+	public void setTotalOperationCount(int totalOperationCount)
+	{
+		this.totalOperationCount = totalOperationCount;
 	}
 }

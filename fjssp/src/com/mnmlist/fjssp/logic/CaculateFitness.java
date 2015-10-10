@@ -27,20 +27,20 @@ public class CaculateFitness
 		int[][] proDesMatrix = problemInputII.getProDesMatrix();
 		int operationToIndex[][]=problemInputII.getOperationToIndex();
 		int count = 0, tempCount = 0, index = 0;
-		int totalOperationIndex = operationToIndex[jobNo][operationNo];
+		int totaloperNo = operationToIndex[jobNo][operationNo];
 		index = 0;
 		tempCount = 0;
-		count = dnaSeq[totalOperationIndex];
+		count = dnaSeq[totaloperNo];
 		while (tempCount < count)
 		{
-			if (proDesMatrix[totalOperationIndex][index] != 0)
+			if (proDesMatrix[totaloperNo][index] != 0)
 				tempCount++;
 			index++;
 		}
 		index--;
 		// machineNo=index,time=prodesMatrix[i][index]
 		machineNoAndTimeArr[0]=index;
-		machineNoAndTimeArr[1]=proDesMatrix[totalOperationIndex][index];
+		machineNoAndTimeArr[1]=proDesMatrix[totaloperNo][index];
 		return machineNoAndTimeArr;
 	}
 	/**
@@ -54,52 +54,52 @@ public class CaculateFitness
 	{
 		int length=dna.length/2;
 		int jobCount=input.getJobCount();
-		int operCount=input.getMaxOperationCount();
+		int operCount=input.getTotalOperationCount();
 		int machineCount=input.getMachineCount();
 		int span = -1;
-		int[] operationIndexOfEachJob = new int[jobCount];// 工种数
-		int[] machineLastestFreeTime = new int[machineCount];// 机器数
+		int[] operNoOfEachJob = new int[jobCount];// 工种数
+		int[] machFreeTime = new int[machineCount];// 机器数
 		Operation[][] jobOperMatrix = new Operation[jobCount][operCount];
 		for (int p = 0; p < jobCount; p++)
 			for (int q = 0; q < operCount; q++)
 				jobOperMatrix[p][q] = new Operation();
 		int i = 0;
-		int gongjianName = 0;
-		int operationIndex = 0;
+		int jobNo = 0;
+		int operNo = 0;
 		int operationTime = 0;
 		int machineNo = 0;
 		for (i = 0; i < length; i++)
 		{
-			gongjianName = dna[i];// 工件名
-			operationIndex = operationIndexOfEachJob[gongjianName]++;// 当前工件操作所在的工序数
-			int machNoTimeArr[]=getMachineNoAndTime(input, dna, gongjianName, operationIndex);
+			jobNo = dna[i];// 工件名
+			operNo = operNoOfEachJob[jobNo]++;// 当前工件操作所在的工序数
+			int machNoTimeArr[]=getMachineNoAndTime(input, dna, jobNo, operNo);
 			machineNo=machNoTimeArr[0];
 			operationTime=machNoTimeArr[1];
-			if (operationIndex == 0)
+			if (operNo == 0)
 			{
-				jobOperMatrix[gongjianName][operationIndex].jobNo = gongjianName;
-				jobOperMatrix[gongjianName][operationIndex].operationNo = operationIndex;
-				// jobOperMatrix[gongjianName][operationIndex].machineNo
+				jobOperMatrix[jobNo][operNo].jobNo = jobNo;
+				jobOperMatrix[jobNo][operNo].operationNo = operNo;
+				// jobOperMatrix[jobNo][operNo].machineNo
 				// = machineNo;
-				jobOperMatrix[gongjianName][operationIndex].startTime = machineLastestFreeTime[machineNo];
-				jobOperMatrix[gongjianName][operationIndex].endTime = jobOperMatrix[gongjianName][operationIndex].startTime
+				jobOperMatrix[jobNo][operNo].startTime = machFreeTime[machineNo];
+				jobOperMatrix[jobNo][operNo].endTime = jobOperMatrix[jobNo][operNo].startTime
 						+ operationTime;
 			} else
 			{
-				jobOperMatrix[gongjianName][operationIndex].jobNo = gongjianName;
-				jobOperMatrix[gongjianName][operationIndex].operationNo = operationIndex;
-				// jobOperMatrix[gongjianName][operationIndex].machineNo
+				jobOperMatrix[jobNo][operNo].jobNo = jobNo;
+				jobOperMatrix[jobNo][operNo].operationNo = operNo;
+				// jobOperMatrix[jobNo][operNo].machineNo
 				// = machineNo;
-				jobOperMatrix[gongjianName][operationIndex].startTime = UtilLib
-						.max(jobOperMatrix[gongjianName][operationIndex - 1].endTime,
-								machineLastestFreeTime[machineNo]);
-				jobOperMatrix[gongjianName][operationIndex].endTime = jobOperMatrix[gongjianName][operationIndex].startTime
+				jobOperMatrix[jobNo][operNo].startTime = UtilLib
+						.max(jobOperMatrix[jobNo][operNo - 1].endTime,
+								machFreeTime[machineNo]);
+				jobOperMatrix[jobNo][operNo].endTime = jobOperMatrix[jobNo][operNo].startTime
 						+ operationTime;
 			}
-			machineLastestFreeTime[machineNo] = jobOperMatrix[gongjianName][operationIndex].endTime;
-			if (jobOperMatrix[gongjianName][operationIndex].endTime > span)
+			machFreeTime[machineNo] = jobOperMatrix[jobNo][operNo].endTime;
+			if (jobOperMatrix[jobNo][operNo].endTime > span)
 			{
-				span = jobOperMatrix[gongjianName][operationIndex].endTime;
+				span = jobOperMatrix[jobNo][operNo].endTime;
 			}
 		}
 
@@ -115,57 +115,57 @@ public class CaculateFitness
 	{
 		int length=dna.length/2;
 		int jobCount=input.getJobCount();
-		int operCount=input.getMaxOperationCount();
+		int operCount=input.getTotalOperationCount();
 		int machineCount=input.getMachineCount();
 		StringBuilder jobNoBuilder = new StringBuilder();
 		StringBuilder machineNoBuilder = new StringBuilder();
 		StringBuilder startTimeBuilder = new StringBuilder();
 		StringBuilder endTimeBuilder = new StringBuilder();
 		int span = -1;
-		int[] operationIndexOfEachJob = new int[jobCount];
-		int[] machineLastestFreeTime = new int[machineCount];
+		int[] operNoOfEachJob = new int[jobCount];
+		int[] machFreeTime = new int[machineCount];
 		Operation[][] jobOperMatrix = new Operation[jobCount][operCount];
 		for (int p = 0; p < jobCount; p++)
 			for (int q = 0; q < operCount; q++)
 				jobOperMatrix[p][q] = new Operation();
 		// operation schedule[input->machineCount][input->jobCount];
-		int gongjianName = 0;
-		int operationIndex = 0;
+		int jobNo = 0;
+		int operNo = 0;
 		int operationTime = 0;
 		int machineNo = 0;
 		int start = 0, end = 0;
 		for (int i = 0; i < length; i++)
 		{
-			gongjianName = dna[i];
-			operationIndex = operationIndexOfEachJob[gongjianName]++;
-			int machNoTimeArr[]=getMachineNoAndTime(input, dna, gongjianName, operationIndex);
+			jobNo = dna[i];
+			operNo = operNoOfEachJob[jobNo]++;
+			int machNoTimeArr[]=getMachineNoAndTime(input, dna, jobNo, operNo);
 			machineNo=machNoTimeArr[0];
 			operationTime=machNoTimeArr[1];
-			jobOperMatrix[gongjianName][operationIndex].jobNo = gongjianName;
-			jobOperMatrix[gongjianName][operationIndex].operationNo = operationIndex;
-			// jobOperMatrix[gongjianName][operationIndex].machineNo
+			jobOperMatrix[jobNo][operNo].jobNo = jobNo;
+			jobOperMatrix[jobNo][operNo].operationNo = operNo;
+			// jobOperMatrix[jobNo][operNo].machineNo
 			// = machineNo;
-			if (operationIndex == 0)
-				start = machineLastestFreeTime[machineNo];
+			if (operNo == 0)
+				start = machFreeTime[machineNo];
 			else
 				start = UtilLib
-						.max(jobOperMatrix[gongjianName][operationIndex - 1].endTime,
-								machineLastestFreeTime[machineNo]);
-			jobOperMatrix[gongjianName][operationIndex].startTime = start;
-			end = jobOperMatrix[gongjianName][operationIndex].startTime
+						.max(jobOperMatrix[jobNo][operNo - 1].endTime,
+								machFreeTime[machineNo]);
+			jobOperMatrix[jobNo][operNo].startTime = start;
+			end = jobOperMatrix[jobNo][operNo].startTime
 					+ operationTime;
-			jobOperMatrix[gongjianName][operationIndex].endTime = end;
-			machineLastestFreeTime[machineNo] = jobOperMatrix[gongjianName][operationIndex].endTime;
-			if (jobOperMatrix[gongjianName][operationIndex].endTime > span)
+			jobOperMatrix[jobNo][operNo].endTime = end;
+			machFreeTime[machineNo] = jobOperMatrix[jobNo][operNo].endTime;
+			if (jobOperMatrix[jobNo][operNo].endTime > span)
 			{
-				span = jobOperMatrix[gongjianName][operationIndex].endTime;
+				span = jobOperMatrix[jobNo][operNo].endTime;
 			}
 			System.out.print("Machine:" + (machineNo + 1) + "|Job:"
-					+ (gongjianName + 1) + "|Gongxu:" + (operationIndex + 1));
+					+ (jobNo + 1) + "|Gongxu:" + (operNo + 1));
 			System.out.println("|p(" + (machineNo + 1) + ","
-					+ (gongjianName + 1) + ")=" + operationTime + "|s:"
+					+ (jobNo + 1) + ")=" + operationTime + "|s:"
 					+ (start + 1) + "|e:" + end);
-			jobNoBuilder.append(gongjianName + " ");
+			jobNoBuilder.append(jobNo + " ");
 			machineNoBuilder.append(machineNo + " ");
 			startTimeBuilder.append(start + " ");
 			endTimeBuilder.append(end - start + " ");
@@ -223,7 +223,7 @@ public class CaculateFitness
 			Arrays.fill(sheduleMatrix[i], ' ');
 		machineNo = 0;
 		int jobCount=input.getJobCount();
-		int operCount=input.getMaxOperationCount();
+		int operCount=input.getTotalOperationCount();
 		for (p = 0; p < jobCount; p++)
 		{
 			ch = flagString.charAt(p);// 每一个工件对应一种字符
@@ -240,6 +240,7 @@ public class CaculateFitness
 			}
 
 		}
+		@SuppressWarnings("resource")
 		Formatter formatter = new Formatter(System.out);
 		formatter.format("%15.15s", "x coordinate:");
 		for (j = 0; j < colums; j++)

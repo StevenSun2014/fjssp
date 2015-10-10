@@ -1,15 +1,6 @@
 package com.mnmlist.fjssp.logic;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
 
 import com.mnmlist.fjssp.data.BestSolution;
 import com.mnmlist.fjssp.data.ProblemInputII;
@@ -46,7 +37,7 @@ class SchedulingStart
 	 */
 	public static void schedulingBegin(ProblemInputII input)
 	{
-		GA jsspProblem = new GA();
+		FlexibleJobShop jsspProblem = new FlexibleJobShop();
 		int currentBestChromesome[];
 		int bestChromesome[] = new int[2000];// init is 2000
 		int bestFitness = 0;
