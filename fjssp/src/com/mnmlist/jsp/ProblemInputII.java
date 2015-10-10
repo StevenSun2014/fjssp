@@ -4,8 +4,6 @@ public class ProblemInputII
 {
 	private int[] operationCountArr;
 	private int proDesMatrix[][];
-	private int machineNoMatrix[][];// 机器号矩阵
-	private int timeMatrix[][]; // 时间矩阵
 	private int machineCount; // 机器数
 	private int jobCount; // 作业数目
 	private int maxOperationCount = 0;
@@ -49,26 +47,6 @@ public class ProblemInputII
 	public void setProDesMatrix(int[][] proDesMatrix)
 	{
 		this.proDesMatrix = proDesMatrix;
-	}
-
-	public int[][] getMachineNoMatrix()
-	{
-		return machineNoMatrix;
-	}
-
-	public void setMachineNoMatrix(int[][] machineNoMatrix)
-	{
-		this.machineNoMatrix = machineNoMatrix;
-	}
-
-	public int[][] getTimeMatrix()
-	{
-		return timeMatrix;
-	}
-
-	public void setTimeMatrix(int[][] timeMatrix)
-	{
-		this.timeMatrix = timeMatrix;
 	}
 
 	public int getMachineCount()

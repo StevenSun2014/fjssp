@@ -13,9 +13,34 @@ import java.util.Formatter;
  */
 public class CaculateFitness
 {
-	// 计算一条染色体（一个可行的调度）所耗费的最大时间
-	
 	/**
+	 * @param problemInputII
+	 *            the problem description which has been arranged
+	 */
+	public static int [] getMachineNoAndTime(ProblemInputII problemInputII,int dnaSeq[],int jobNo,int operationNo)
+	{
+		int machineNoAndTimeArr[]=new int[2];
+		int[][] proDesMatrix = problemInputII.getProDesMatrix();
+		int operationToIndex[][]=problemInputII.getOperationToIndex();
+		int count = 0, tempCount = 0, index = 0;
+		int totalOperationIndex = operationToIndex[jobNo][operationNo];
+		index = 0;
+		tempCount = 0;
+		count = dnaSeq[totalOperationIndex];
+		while (tempCount < count)
+		{
+			if (proDesMatrix[totalOperationIndex][index] != 0)
+				tempCount++;
+			index++;
+		}
+		index--;
+		// machineNo=index,time=prodesMatrix[i][index]
+		machineNoAndTimeArr[0]=index;
+		machineNoAndTimeArr[1]=proDesMatrix[totalOperationIndex][index];
+		return machineNoAndTimeArr;
+	}
+	/**
+	 * 计算一条染色体（一个可行的调度）所耗费的最大时间
 	 * @param dna:the dna array,an element represents a procedure of a job
 	 * @param length:the DNA array length
 	 * @param input:the time and order information of the problem

@@ -32,56 +32,20 @@ public class InitProblemDescription
 	}
 
 	/**
-	 * @param problemInputII
-	 *            the problem description which has been arranged
-	 */
-	public static void fixSolution(FeasibleSolution solution)
-	{
-		int[][] proDesMatrix = solution.getProDesMatrix();
-		int[] machineNoSequence = solution.getMachineNoSequence();
-		int[] operationSequence = solution.getOperationSequence();
-		int[][] machineNoMatrix = solution.getMachineNoMatrix();
-		int[][] timeMatrix = solution.getTimeMatrix();
-		int crossStart = solution.getCrossStart();
-		int crossEnd = solution.getCrossEnd();
-		int mutationStart = solution.getMutationStart();
-		int mutationEnd = solution.getMutationEnd();
-		int count = 0, tempCount = 0, index = 0;
-
-		int totalOperationIndex = crossStart;
-		index = 0;
-		tempCount = 0;
-		count = machineNoSequence[totalOperationIndex];
-		while (tempCount < count)
-		{
-			if (proDesMatrix[totalOperationIndex][index] != 0)
-				tempCount++;
-			index++;
-		}
-		index--;
-		// machineNo=index,time=prodesMatrix[i][index]
-	}
-
-	/**
 	 * @param problemInput
 	 *            the problem description which has been arranged
 	 */
 	public static int[] localSearch(ProblemInputII problemInput)
 	{
-		boolean testFlag = true;
 		int proDesMatrix[][] = problemInput.getProDesMatrix();
 		int machineCount = problemInput.getMachineCount();
 		int jobCount = problemInput.getJobCount();
 		int machineTimeArr[] = new int[machineCount];
 		int machineSequenceLen = proDesMatrix.length;
 		int machineNoSequence[] = new int[machineSequenceLen];
-		int maxOperationCount = problemInput.getMaxOperationCount();
 		int[][] operationToIndex = problemInput.getOperationToIndex();// 某工件工序所对应的index
-		int machineNoMatrix[][] = new int[jobCount][maxOperationCount];
-		int timeMatrix[][] = new int[jobCount][maxOperationCount];
 		int start = 0, end = 0;
 		int jobNo = 0;
-		// int tempJobCount=0;
 		while (jobNo < jobCount)
 		{
 			start = operationToIndex[jobNo][0];
@@ -91,7 +55,7 @@ public class InitProblemDescription
 			{
 				end = proDesMatrix.length - 1;
 			}
-			int minIndex = 0, j = 0, minTime = 0, operationIndex = 0, machineEncode = 0;
+			int minIndex = 0, j = 0, minTime = 0, machineEncode = 0;
 			for (int i = start; i <= end; i++)
 			{
 				j = 0;
@@ -99,8 +63,6 @@ public class InitProblemDescription
 					j++;
 				minIndex = j;
 				minTime = machineTimeArr[j] + proDesMatrix[i][j];
-				System.out.println(Arrays.toString(proDesMatrix[i]));
-				System.out.println(Arrays.toString(machineTimeArr));
 				j++;
 				while (j < machineCount)
 				{
@@ -114,9 +76,6 @@ public class InitProblemDescription
 				}
 				machineTimeArr[minIndex] = minTime;// update the machine time
 													// array
-				operationIndex = i - start;
-				machineNoMatrix[jobNo][operationIndex] = minIndex;
-				timeMatrix[jobNo][operationIndex] = proDesMatrix[i][minIndex];
 				// caculate the machine encode
 				j = 0;
 				machineEncode = 0;
@@ -132,17 +91,6 @@ public class InitProblemDescription
 			Arrays.fill(machineTimeArr, 0);
 			jobNo++;
 		}
-		problemInput.setMachineNoMatrix(machineNoMatrix);
-		problemInput.setTimeMatrix(timeMatrix);
-		if (testFlag)
-		{
-			System.out.println("MachineNoMatrix:");
-			for (int i = 0; i < machineNoMatrix.length; i++)
-				System.out.println(Arrays.toString(machineNoMatrix[i]));
-			System.out.println("TimeMatrix:");
-			for (int i = 0; i < timeMatrix.length; i++)
-				System.out.println(Arrays.toString(timeMatrix[i]));
-		}
 		return machineNoSequence;
 	}
 
@@ -152,21 +100,17 @@ public class InitProblemDescription
 	 */
 	public static int[] randomSearch(ProblemInputII problemInput)
 	{
-		boolean testFlag = true;
 		int proDesMatrix[][] = problemInput.getProDesMatrix();
 		int jobCount = problemInput.getJobCount();
 		int machineSequenceLen = proDesMatrix.length;
 		int machineSequence[] = new int[machineSequenceLen];
-		int maxOperationCount = problemInput.getMaxOperationCount();
 		int[][] operationToIndex = problemInput.getOperationToIndex();// 某工件工序所对应的index
-		int machineNoMatrix[][] = new int[jobCount][maxOperationCount];
-		int timeMatrix[][] = new int[jobCount][maxOperationCount];
 		int operationCountArr[] = problemInput.getOperationCountArr();
 		int start = 0, end = 0;
 		int jobNo = 0;
 		Random random = new Random();
 		int count = 0, index = 0;
-		int j = 0, operationIndex = 0;
+		int j = 0;
 		while (jobNo < jobCount)
 		{
 			start = operationToIndex[jobNo][0];
@@ -189,22 +133,8 @@ public class InitProblemDescription
 				}
 				index--;
 				machineSequence[i] = count;
-				operationIndex = i - start;
-				machineNoMatrix[jobNo][operationIndex] = index;
-				timeMatrix[jobNo][operationIndex] = proDesMatrix[i][index];
 			}
 			jobNo++;
-		}
-		problemInput.setMachineNoMatrix(machineNoMatrix);
-		problemInput.setTimeMatrix(timeMatrix);
-		if (testFlag)
-		{
-			System.out.println("MachineNoMatrix:");
-			for (int i = 0; i < machineNoMatrix.length; i++)
-				System.out.println(Arrays.toString(machineNoMatrix[i]));
-			System.out.println("TimeMatrix:");
-			for (int i = 0; i < timeMatrix.length; i++)
-				System.out.println(Arrays.toString(timeMatrix[i]));
 		}
 		return machineSequence;
 	}
@@ -215,18 +145,14 @@ public class InitProblemDescription
 	 */
 	public static int[] globalSearch(ProblemInputII problemInput)
 	{
-		boolean testFlag = true;
 		int proDesMatrix[][] = problemInput.getProDesMatrix();
 		int machineCount = problemInput.getMachineCount();
 		int jobCount = problemInput.getJobCount();
 		int machineTimeArr[] = new int[machineCount];
 		int machineSequenceLen = proDesMatrix.length;
 		int machineSequence[] = new int[machineSequenceLen];
-		int maxOperationCount = problemInput.getMaxOperationCount();
 		int[][] operationToIndex = problemInput.getOperationToIndex();// 某工件工序所对应的index
 		List<Integer> jobNoList = new ArrayList<Integer>();
-		int machineNoMatrix[][] = new int[jobCount][maxOperationCount];
-		int timeMatrix[][] = new int[jobCount][maxOperationCount];
 		for (int i = 0; i < jobCount; i++)
 			jobNoList.add(i);
 		Random random = new Random();
@@ -246,7 +172,7 @@ public class InitProblemDescription
 			{
 				end = proDesMatrix.length - 1;
 			}
-			int minIndex = 0, j = 0, minTime = 0, operationIndex = 0, machineEncode = 0;
+			int minIndex = 0, j = 0, minTime = 0, machineEncode = 0;
 			for (int i = start; i <= end; i++)
 			{
 				j = 0;
@@ -254,8 +180,6 @@ public class InitProblemDescription
 					j++;
 				minIndex = j;
 				minTime = machineTimeArr[j] + proDesMatrix[i][j];
-				System.out.println(Arrays.toString(proDesMatrix[i]));
-				System.out.println(Arrays.toString(machineTimeArr));
 				j++;
 				while (j < machineCount)
 				{
@@ -270,9 +194,6 @@ public class InitProblemDescription
 				}
 				machineTimeArr[minIndex] = minTime;// update the machine time
 													// array
-				operationIndex = i - start;
-				machineNoMatrix[jobNo][operationIndex] = minIndex;
-				timeMatrix[jobNo][operationIndex] = proDesMatrix[i][minIndex];
 				// caculate the machine encode
 				j = 0;
 				machineEncode = 0;
@@ -287,17 +208,6 @@ public class InitProblemDescription
 			}
 			jobNoList.remove(randomIndex);
 			listSize = jobNoList.size();
-		}
-		problemInput.setMachineNoMatrix(machineNoMatrix);
-		problemInput.setTimeMatrix(timeMatrix);
-		if (testFlag)
-		{
-			System.out.println("MachineNoMatrix:");
-			for (int i = 0; i < machineNoMatrix.length; i++)
-				System.out.println(Arrays.toString(machineNoMatrix[i]));
-			System.out.println("TimeMatrix:");
-			for (int i = 0; i < timeMatrix.length; i++)
-				System.out.println(Arrays.toString(timeMatrix[i]));
 		}
 		return machineSequence;
 	}

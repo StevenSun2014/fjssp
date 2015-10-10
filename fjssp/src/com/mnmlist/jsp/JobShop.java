@@ -183,7 +183,7 @@ class GA
 				posa = generator.nextInt(randomRange) % dnaLength;
 				posb = generator.nextInt(randomRange) % dnaLength;
 				min = posa < posb ? posa : posb;
-				GeneOperator.mutation(newDNAs[index], dnaLength, min, posa
+				GeneOperator.mutation(newDNAs[index], min, posa
 						+ posb - min);
 			}
 			int[] newFitness = new int[crossCount];

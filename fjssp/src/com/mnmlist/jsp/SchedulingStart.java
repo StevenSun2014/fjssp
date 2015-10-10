@@ -44,21 +44,6 @@ class SchedulingStart
 		return reader;
 	}
 	/**
-	 * @param problemInput  the problem description which has been arranged
-	 */
-	public static void localSearch(ProblemInputII problemInput)
-	{
-		
-	}
-	/**
-	 * @param problemInput  the problem description which has been arranged
-	 */
-	public static void randomSearch(ProblemInputII problemInput)
-	{
-		
-	}
-	
-	/**
 	 * @param proDesMatrix the machine and time on some machine
 	 * @return the machine enconding array
 	 */
