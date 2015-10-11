@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.Formatter;
 
 import com.mnmlist.fjssp.data.Operation;
-import com.mnmlist.fjssp.data.ProblemInputII;
+import com.mnmlist.fjssp.data.ProblemInfo;
 import com.mnmlist.fjssp.lib.UtilLib;
 
 /**
@@ -18,14 +18,14 @@ import com.mnmlist.fjssp.lib.UtilLib;
 public class CaculateFitness
 {
 	/**
-	 * @param problemInputII
+	 * @param ProblemInfo
 	 *            the problem description which has been arranged
 	 */
-	public static int [] getMachineNoAndTime(ProblemInputII problemInputII,int dnaSeq[],int jobNo,int operationNo)
+	public static int [] getMachineNoAndTime(ProblemInfo ProblemInfo,int dnaSeq[],int jobNo,int operationNo)
 	{
 		int machineNoAndTimeArr[]=new int[2];
-		int[][] proDesMatrix = problemInputII.getProDesMatrix();
-		int operationToIndex[][]=problemInputII.getOperationToIndex();
+		int[][] proDesMatrix = ProblemInfo.getProDesMatrix();
+		int operationToIndex[][]=ProblemInfo.getOperationToIndex();
 		int count = 0, tempCount = 0, index = 0;
 		int totaloperNo = operationToIndex[jobNo][operationNo];
 		index = 0;
@@ -50,7 +50,7 @@ public class CaculateFitness
 	 * @param input:the time and order information of the problem
 	 * @return the fitness of a sheduling
 	 */
-	public static int evaluate(int[] dna,ProblemInputII input)
+	public static int evaluate(int[] dna,ProblemInfo input)
 	{
 		int length=dna.length/2;
 		int jobCount=input.getJobCount();
@@ -111,7 +111,7 @@ public class CaculateFitness
 	 * @param input:the time and order information of the problem
 	 * @return the fitness of a sheduling
 	 */
-	public static int evaluatePrint(int[] dna, ProblemInputII input)
+	public static int evaluatePrint(int[] dna, ProblemInfo input)
 	{
 		int length=dna.length/2;
 		int jobCount=input.getJobCount();
@@ -207,7 +207,7 @@ public class CaculateFitness
 	 * @param jobOperMatrix:the handle process of the scheduling
 	 * problem,which will include operationNo,jobNo,startTime,endTime
 	 */
-	public static void printSchedPicInConsole(ProblemInputII input,int []dna,
+	public static void printSchedPicInConsole(ProblemInfo input,int []dna,
 			Operation[][] jobOperMatrix)
 	{
 		int start = 0, end = 0, machineNo = 0;

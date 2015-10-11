@@ -3,7 +3,7 @@ package com.mnmlist.fjssp.logic;
 import java.util.Random;
 
 import com.mnmlist.fjssp.data.Entry;
-import com.mnmlist.fjssp.data.ProblemInputII;
+import com.mnmlist.fjssp.data.ProblemInfo;
 
 /**
  * @author mnmlist@163.com
@@ -13,77 +13,44 @@ import com.mnmlist.fjssp.data.ProblemInputII;
 public class GenerateDNA
 {
 
-	public static void fjsspGenerateOneDNA(ProblemInputII problemInputII, int[] dna,
-			Entry[] entries)
+	public static void fjsspGenerateOneDNA(ProblemInfo input, int[] dna,Entry[] entries)
 	{
-		int jobCount=problemInputII.getJobCount();
+		int jobCount=input.getJobCount();
 		int len=dna.length/2;
-		// entries 工种名及其对应的工序数
+		// entries are jobNo and operation count coressponded
 		int i = 0;
 		int tempjobCount = jobCount;
-		Random generator = problemInputII.getRandom();
-		int randomRange = 32767;
+		Random generator = input.getRandom();
 		int ran = 0;
 		for (i = 0; i < len; i++)
 		{
-			ran = generator.nextInt(randomRange) % tempjobCount;// containerSize：jobcount;
-			dna[i+len] = entries[ran].index;// 每次产生一个基因
-			entries[ran].value--;// 工种名及其对应的工序数减一，即剩余的工序数目减一
+			ran = generator.nextInt(tempjobCount);// containerSize：jobcount remained
+			dna[i+len] = entries[ran].index;// generate one gene at a time
+			entries[ran].value--;// the operation count of some jobNo minus one
 			if (entries[ran].value == 0)
 			{
-				// 工序数目为0时，说明该工种的所有工序已经排完
-				tempjobCount--;// 工种数目
-				entries[ran].index = entries[tempjobCount].index;// 删除工序数目为0的那个工种
-				entries[ran].value = entries[tempjobCount].value;// 通过将最后一个工种及其对应的工序数目赋予工序数目为0的变量来实现
+				// when operation count equals 0,that's to say the job has been finished
+				tempjobCount--;// job count
+				// delete that job whose operation count equals 0
+				entries[ran].index = entries[tempjobCount].index;
+				//which could be done by passs the last value to the ran index one whose operation count equals 0
+				entries[ran].value = entries[tempjobCount].value;
 			}
 		}
 	}
 
-	/**
-	 * @param jobCount
-	 * @param dna
-	 *            the DNA sequence
-	 * @param entries
-	 *            include the jobNo and the procedureNo
-	 * @param dnaLength
-	 */
-	public static void generateOneDNA(int jobCount, int[] dna, Entry[] entries,
-			int dnaLength)
-	{
-
-		// entries 工种名及其对应的工序数
-		int i = 0;
-		int tempjobCount = jobCount;
-		Random generator = new Random();
-		int randomRange = 32767;
-		int ran = 0;
-		for (i = 0; i < dnaLength; i++)
-		{
-			ran = generator.nextInt(randomRange) % tempjobCount;// containerSize：jobcount;
-			dna[i] = entries[ran].index;// 每次产生一个基因
-			entries[ran].value--;// 工种名及其对应的工序数减一，即剩余的工序数目减一
-			if (entries[ran].value == 0)
-			{
-				// 工序数目为0时，说明该工种的所有工序已经排完
-				tempjobCount--;// 工种数目
-				entries[ran].index = entries[tempjobCount].index;// 删除工序数目为0的那个工种
-				entries[ran].value = entries[tempjobCount].value;// 通过将最后一个工种及其对应的工序数目赋予工序数目为0的变量来实现
-			}
-		}
-	}
 
 	/**
-	 * @param jobCount
-	 * @param populationSize
+	 * generate all the DNA of populationSize size
 	 * @param dnaArray
 	 *            the DNA sequence of the whole population
 	 * @param entries
 	 *            include the jobNo and the procedureNo
-	 * @param dnaLength
 	 */
-	public static void generateDNAs(int jobCount, int populationSize,
-			int[][] dnaArray, Entry[] entries, int dnaLength)
+	public static void fjsspGenerateDNAs(ProblemInfo input,int[][] dnaArray, Entry[] entries)
 	{
+		int jobCount=input.getJobCount();
+		int populationSize=input.getPopulationCount();
 		// entries 工种名及其对应的工序数
 		int i = 0;
 		Entry[] tempEntries = new Entry[jobCount];
@@ -98,7 +65,7 @@ public class GenerateDNA
 				tempEntries[p].index = entries[p].index;
 				tempEntries[p].value = entries[p].value;
 			}
-			generateOneDNA(jobCount, dnaArray[i], tempEntries, dnaLength);
+			fjsspGenerateOneDNA(input, dnaArray[i],tempEntries);
 		}
 	}
 }

@@ -2,7 +2,7 @@ package com.mnmlist.fjssp.data;
 
 import java.util.Random;
 
-public class ProblemInputII
+public class ProblemInfo
 {
 	private int[] operationCountArr;//how many operations for every job
 	private int proDesMatrix[][];//the machine no and time for every operation
@@ -16,6 +16,24 @@ public class ProblemInputII
 	private int populationCount=100;
 	private int iteratorCount=200;
 	private int timeLimit=-1;//no time limit
+	private double gsRate=0.6;//global search rate
+	private double lsRate=0.3;//local search rate
+	private double rsRate=0.1;//random search rate
+	public double getGsRate()
+	{
+		return gsRate;
+	}
+
+	public double getLsRate()
+	{
+		return lsRate;
+	}
+
+	public double getRsRate()
+	{
+		return rsRate;
+	}
+
 	public int getTimeLimit()
 	{
 		return timeLimit;

@@ -1,6 +1,6 @@
 package com.mnmlist.fjssp.lib;
 
-import com.mnmlist.fjssp.data.ProblemInputII;
+import com.mnmlist.fjssp.data.ProblemInfo;
 
 /**
  * @author mnmlist@163.com
@@ -18,7 +18,7 @@ public class UtilLib {
 	 * @param startTime
 	 * @return
 	 */
-	public static boolean isEnd(ProblemInputII input, int k, long startTime) {
+	public static boolean isEnd(ProblemInfo input, int k, long startTime) {
 		int timeLimit=input.getTimeLimit();
 		if (timeLimit > 0) {
 			if (k >= input.getIteratorCount()) {

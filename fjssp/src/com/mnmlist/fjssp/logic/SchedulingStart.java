@@ -3,7 +3,7 @@ package com.mnmlist.fjssp.logic;
 import java.io.File;
 
 import com.mnmlist.fjssp.data.BestSolution;
-import com.mnmlist.fjssp.data.ProblemInputII;
+import com.mnmlist.fjssp.data.ProblemInfo;
 
 /**
  * @author mnmlist@163.com
@@ -16,7 +16,7 @@ class SchedulingStart
 	{
 		//get the problem description,such as populationCount,crossoverRate,mutationRate
 		File file=new File("mk01.txt");
-		ProblemInputII input=InitProblemDescription.getProblemDesFromFile(file);
+		ProblemInfo input=InitProblemDescription.getProblemDesFromFile(file);
 		//get the input parameter ,such as the order,the job
 		SchedulingStart.schedulingBegin(input);
 	}
@@ -35,7 +35,7 @@ class SchedulingStart
 	 * @param input:the time and order information of the input matrix
 	 * @param para:the information of the scheduling problem,such as populationCount,crossoverRate,mutationRate
 	 */
-	public static void schedulingBegin(ProblemInputII input)
+	public static void schedulingBegin(ProblemInfo input)
 	{
 		FlexibleJobShop jsspProblem = new FlexibleJobShop();
 		int currentBestChromesome[];
@@ -43,6 +43,7 @@ class SchedulingStart
 		int bestFitness = 0;
 		int currentBestFitness = 0;
 		int loopNum = 30;// µü´ú´ÎÊý
+		int dnaLen=input.getMaxOperationCount()*2;
 		for (int i = 0; i < loopNum; i++)
 		{
 			BestSolution bestSolution = jsspProblem.solve( input);
@@ -58,7 +59,7 @@ class SchedulingStart
 				{
 					bestFitness = currentBestFitness;
 					System.arraycopy(currentBestChromesome, 0, bestChromesome,
-							0, jsspProblem.dnaLen);
+							0, dnaLen);
 				}
 			}
 			System.out.print("In " + (i + 1)
@@ -74,7 +75,7 @@ class SchedulingStart
 		System.out.println("After " + loopNum
 				+ "generation the best fitness is " + bestFitness);
 		System.out.println("the final and best chromesome is as follows...");
-		for (int i = 0; i < jsspProblem.dnaLen; i++)
+		for (int i = 0; i < dnaLen; i++)
 			System.out.print(bestChromesome[i] + "\t");
 		System.out.println();
 		CaculateFitness.evaluatePrint(bestChromesome,input);

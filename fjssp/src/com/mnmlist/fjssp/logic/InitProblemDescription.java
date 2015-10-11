@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import com.mnmlist.fjssp.data.ProblemInputII;
+import com.mnmlist.fjssp.data.ProblemInfo;
 
 public class InitProblemDescription
 {
@@ -32,12 +32,13 @@ public class InitProblemDescription
 		}
 		return reader;
 	}
-
 	/**
 	 * @param problemInput
-	 *            the problem description which has been arranged
+	 * 			 the problem description which has been arranged
+	 * @return	
+	 * 			a feasible solution merely include machine sequence
 	 */
-	public static int[] localSearch(ProblemInputII problemInput)
+	public static int[] localSearch(ProblemInfo problemInput)
 	{
 		int proDesMatrix[][] = problemInput.getProDesMatrix();
 		int machineCount = problemInput.getMachineCount();
@@ -99,8 +100,9 @@ public class InitProblemDescription
 	/**
 	 * @param problemInput
 	 *            the problem description which has been arranged
+	 * @return    a feasible solution merely include machine sequence
 	 */
-	public static int[] randomSearch(ProblemInputII problemInput)
+	public static int[] randomSearch(ProblemInfo problemInput)
 	{
 		int proDesMatrix[][] = problemInput.getProDesMatrix();
 		int jobCount = problemInput.getJobCount();
@@ -144,15 +146,16 @@ public class InitProblemDescription
 	/**
 	 * @param problemInput
 	 *            the problem description which has been arranged
+	 * @return    a feasible solution merely include machine sequence
 	 */
-	public static int[] globalSearch(ProblemInputII problemInput)
+	public static int[] globalSearch(ProblemInfo problemInput)
 	{
 		int proDesMatrix[][] = problemInput.getProDesMatrix();
 		int machineCount = problemInput.getMachineCount();
 		int jobCount = problemInput.getJobCount();
 		int machineTimeArr[] = new int[machineCount];
 		int machineSequenceLen = proDesMatrix.length;
-		int machineSequence[] = new int[machineSequenceLen];
+		int machineSequence[] = new int[machineSequenceLen*2];
 		int[][] operationToIndex = problemInput.getOperationToIndex();// 某工件工序所对应的index
 		List<Integer> jobNoList = new ArrayList<Integer>();
 		for (int i = 0; i < jobCount; i++)
@@ -219,9 +222,9 @@ public class InitProblemDescription
 	 *            the problem description stored location
 	 * @return the problem description which has been arranged
 	 */
-	public static ProblemInputII getProblemDesFromFile(File file)
+	public static ProblemInfo getProblemDesFromFile(File file)
 	{
-		ProblemInputII problemInputII = new ProblemInputII();
+		ProblemInfo ProblemInfo = new ProblemInfo();
 		BufferedReader reader = getBufferedReader(file);
 		String prodesStrArr[] = null;
 		int proDesMatrix[][] = null;
@@ -234,15 +237,14 @@ public class InitProblemDescription
 			String proDesArr[] = proDesString.split("\\s+");
 			int jobNum = Integer.valueOf(proDesArr[0]);
 			int machineNum = Integer.valueOf(proDesArr[1]);
-			problemInputII.setJobCount(jobNum);
-			problemInputII.setMachineCount(machineNum);
+			ProblemInfo.setJobCount(jobNum);
+			ProblemInfo.setMachineCount(machineNum);
 			prodesStrArr = new String[jobNum];
 			int count = 0;// caculate how many orders in the problem
 			int index = 0;// store the index of first blank
-			int maxOperationCount = 0, tempCount = 0;// find the max operation
-														// count of the job
-														// arrays
+			int maxOperationCount = 0, tempCount = 0;
 			// operationCountArr=new int[jobNum];
+			// find the max operation count of the job arrays
 			for (int i = 0; i < jobNum; i++)
 			{
 				prodesStrArr[i] = reader.readLine().trim();
@@ -255,8 +257,8 @@ public class InitProblemDescription
 					maxOperationCount = tempCount;
 			}
 			int[][] operationToIndex = new int[jobNum][maxOperationCount];// 用来存储i工件j工序所对应的problemDesMatrix[][]的index
-			problemInputII.setMaxOperationCount(maxOperationCount);
-			// problemInputII.setOperationCountArr(operationCountArr);
+			ProblemInfo.setMaxOperationCount(maxOperationCount);
+			// ProblemInfo.setOperationCountArr(operationCountArr);
 			proDesMatrix = new int[count][];
 			String opeationDesArr[];
 			int operationCount = 0;
@@ -300,16 +302,16 @@ public class InitProblemDescription
 			int listSize = operationCountList.size();
 			for (int i = 0; i < listSize; i++)
 				operationCountArr[i] = operationCountList.get(i);
-			problemInputII.setProDesMatrix(proDesMatrix);
-			problemInputII.setTotalOperationCount(proDesMatrix.length);
-			problemInputII.setOperationToIndex(operationToIndex);
-			problemInputII.setOperationCountArr(operationCountArr);
+			ProblemInfo.setProDesMatrix(proDesMatrix);
+			ProblemInfo.setTotalOperationCount(proDesMatrix.length);
+			ProblemInfo.setOperationToIndex(operationToIndex);
+			ProblemInfo.setOperationCountArr(operationCountArr);
 			reader.close();
 		} catch (IOException e)
 		{
 			e.printStackTrace();
 		}
 
-		return problemInputII;
+		return ProblemInfo;
 	}
 }

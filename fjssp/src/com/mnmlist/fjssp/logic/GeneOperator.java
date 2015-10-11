@@ -3,7 +3,7 @@ package com.mnmlist.fjssp.logic;
 import java.util.BitSet;
 import java.util.Random;
 
-import com.mnmlist.fjssp.data.ProblemInputII;
+import com.mnmlist.fjssp.data.ProblemInfo;
 
 /**
  * @author mnmlist@163.com
@@ -15,19 +15,19 @@ public class GeneOperator {
 	 * flexible job shop crossover method,include machine sequence and operation sequence crossover
 	 * @param dna1 one feasible solution
 	 * @param dna2 another feasilbe solution
-	 * @param problemInputII  descrip operation to totalIndex,the operation and the machineNo and time info .etc.
+	 * @param ProblemInfo  descrip operation to totalIndex,the operation and the machineNo and time info .etc.
 	 * @return two feasible solutions(DNA sequence) after crosser over
 	 */
-	public static int[][]fjsspCrossover(int dna1[],int dna2[],ProblemInputII problemInputII)
+	public static int[][]fjsspCrossover(int dna1[],int dna2[],ProblemInfo ProblemInfo)
 	{
 		int newDnaArr[][]=new int[2][dna1.length];
 		int newDna1[]=newDnaArr[0];
 		int newDna2[]=newDnaArr[1];
 		System.arraycopy(dna1, 0, newDna1, 0, dna1.length);
 		System.arraycopy(dna2, 0, newDna2, 0, dna1.length);
-		Random rand=problemInputII.getRandom();
+		Random rand=ProblemInfo.getRandom();
 		machineSeqCrossover(newDna1, newDna2, rand);
-		int jobCount=problemInputII.getJobCount();
+		int jobCount=ProblemInfo.getJobCount();
 		int operationSeq1[]=operSeqCrossover(dna1, dna2, jobCount, rand);
 		int operationSeq2[]=operSeqCrossover(dna2, dna1, jobCount, rand);
 		int operSeqLen=dna1.length/2;
@@ -142,7 +142,7 @@ public class GeneOperator {
 		}
 		return dnaCopy;
 	}
-	public static void fjsspMutation(ProblemInputII input,int []dna)
+	public static void fjsspMutation(ProblemInfo input,int []dna)
 	{
 		//the mutation of the operation sequence
 		int len=dna.length/2;
@@ -178,8 +178,8 @@ public class GeneOperator {
 	 * @param proDesMatrix descrip the operation and the machineNo and time info .etc.
 	 * @param position the mutation index of the machine sequence 
 	 */
-	public static void machineSeqMutation(int[] dna, ProblemInputII problemInputII,int position) {
-		int machineNoTimeArr[]=problemInputII.getProDesMatrix()[position];
+	public static void machineSeqMutation(int[] dna, ProblemInfo ProblemInfo,int position) {
+		int machineNoTimeArr[]=ProblemInfo.getProDesMatrix()[position];
 		int index=0;
 		while(machineNoTimeArr[index]==0)index++;
 		int min=machineNoTimeArr[index];
