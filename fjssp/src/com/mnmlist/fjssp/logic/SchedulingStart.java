@@ -37,16 +37,16 @@ class SchedulingStart
 	 */
 	public static void schedulingBegin(ProblemInfo input)
 	{
-		FlexibleJobShop jsspProblem = new FlexibleJobShop();
+		FlexibleJobShop fjssp = new FlexibleJobShop();
 		int currentBestChromesome[];
-		int bestChromesome[] = new int[2000];// init is 2000
 		int bestFitness = 0;
 		int currentBestFitness = 0;
 		int loopNum = 30;// µü´ú´ÎÊý
 		int dnaLen=input.getMaxOperationCount()*2;
+		int bestChromesome[] = new int[dnaLen];
 		for (int i = 0; i < loopNum; i++)
 		{
-			BestSolution bestSolution = jsspProblem.solve( input);
+			BestSolution bestSolution = fjssp.solve( input);
 			currentBestChromesome = bestSolution.getBestChromesome();
 			currentBestFitness = bestSolution.getBestFitness();
 			if (i == 0)

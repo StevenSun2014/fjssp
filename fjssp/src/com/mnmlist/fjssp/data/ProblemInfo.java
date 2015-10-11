@@ -13,12 +13,17 @@ public class ProblemInfo
 	private int[][] operationToIndex;// the index of some operation of some job
 	private double crossoverRate=0.9;
 	private double mutationRate=0.05;
+	private int loopCount=20;
 	private int populationCount=100;
 	private int iteratorCount=200;
 	private int timeLimit=-1;//no time limit
 	private double gsRate=0.6;//global search rate
 	private double lsRate=0.3;//local search rate
 	private double rsRate=0.1;//random search rate
+	public int getLoopCount()
+	{
+		return loopCount;
+	}
 	public double getGsRate()
 	{
 		return gsRate;

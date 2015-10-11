@@ -154,8 +154,8 @@ public class InitProblemDescription
 		int machineCount = problemInput.getMachineCount();
 		int jobCount = problemInput.getJobCount();
 		int machineTimeArr[] = new int[machineCount];
-		int machineSequenceLen = proDesMatrix.length;
-		int machineSequence[] = new int[machineSequenceLen*2];
+		int dnaLen=problemInput.getTotalOperationCount()*2;
+		int machineSequence[] = new int[dnaLen];
 		int[][] operationToIndex = problemInput.getOperationToIndex();// 某工件工序所对应的index
 		List<Integer> jobNoList = new ArrayList<Integer>();
 		for (int i = 0; i < jobCount; i++)
