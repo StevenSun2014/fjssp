@@ -1,6 +1,5 @@
 package com.mnmlist.fjssp.logic;
 
-import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Random;
 
@@ -48,8 +47,6 @@ public class GeneOperator {
 	public static int[] operSeqCrossover(int operDnaSeq1[], int operDnaSeq2[],
 			int jobCount, Random rand) {
 		int len = operDnaSeq1.length;
-//		if(len==0)
-//			System.out.println("errors in operSeqCrossover,len==0");
 		int dnaCopy[] = new int[len];
 		System.arraycopy(operDnaSeq1, 0, dnaCopy, 0, len);
 		int newDna[] = new int[len];
@@ -93,7 +90,7 @@ public class GeneOperator {
 		int j = 0;
 		for (i = 0; i < newLen; i++) {
 			gongjianNo = dnaCopy[start + i];
-			appearIndex = flagCount[i];// i pay attention to it
+			appearIndex = flagCount[i];// pay attention to it
 			count = 0;
 			for (j = 0; j < len; j++) {
 				if (newDna[j] == gongjianNo)

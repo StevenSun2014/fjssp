@@ -247,7 +247,6 @@ public class InitProblemDescription
 			int count = 0;// caculate how many orders in the problem
 			int index = 0;// store the index of first blank
 			int maxOperationCount = 0, tempCount = 0;
-			// operationCountArr=new int[jobNum];
 			// find the max operation count of the job arrays
 			for (int i = 0; i < jobNum; i++)
 			{
@@ -255,14 +254,12 @@ public class InitProblemDescription
 				index = prodesStrArr[i].indexOf(' ');
 				tempCount = Integer
 						.valueOf(prodesStrArr[i].substring(0, index));
-				// operationCountArr[i]=tempCount;
 				count += tempCount;
 				if (maxOperationCount < tempCount)
 					maxOperationCount = tempCount;
 			}
 			int[][] operationToIndex = new int[jobNum][maxOperationCount];// 用来存储i工件j工序所对应的problemDesMatrix[][]的index
 			input.setMaxOperationCount(maxOperationCount);
-			// ProblemInfo.setOperationCountArr(operationCountArr);
 			proDesMatrix = new int[count][];
 			String opeationDesArr[];
 			int operationCount = 0;
@@ -273,10 +270,8 @@ public class InitProblemDescription
 			for (int i = 0; i < jobNum; i++)
 			{
 				opeationDesArr = prodesStrArr[i].split("\\s+");
-				operationCount = Integer.valueOf(opeationDesArr[0]);// the
-																	// opeartion
-																	// count of
-																	// every job
+				// the opeartion count of every job
+				operationCount = Integer.valueOf(opeationDesArr[0]);
 				operationCountArr[i]=operationCount;
 				int k = 1;
 				for (int j = 0; j < operationCount; j++)
@@ -292,9 +287,11 @@ public class InitProblemDescription
 									.valueOf(opeationDesArr[k++]);
 							proDesMatrix[operationTotalIndex][machineNo - 1] = operationTime;
 						}
-						operationCountList.add(selectedMachineCount);// 存储每个工序的备选机器数目
+						// 存储每个工序的备选机器数目
+						operationCountList.add(selectedMachineCount);
 					}
-					operationToIndex[i][j] = operationTotalIndex;// 用来存储i工件j工序所对应的problemDesMatrix[][]的index
+					// 用来存储i工件j工序所对应的problemDesMatrix[][]的index
+					operationToIndex[i][j] = operationTotalIndex;
 					operationTotalIndex++;
 					if (operationTotalIndex < count)
 					{
@@ -320,6 +317,10 @@ public class InitProblemDescription
 		//storeProdesInfoToDisk(input,proDesMatrix);
 		return input;
 	}
+	/**
+	 * @param input the problem description which has been arranged
+	 * @param prodesMatrix the problem description which has been arranged
+	 */
 	public static void storeProdesInfoToDisk(ProblemInfo input,int prodesMatrix[][])
 	{
 		int operationCountofEveryJobArr[]=input.getOperationCountArr();
@@ -341,7 +342,6 @@ public class InitProblemDescription
 			writer.close();
 		} catch (IOException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
