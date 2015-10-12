@@ -46,8 +46,8 @@ public class InitProblemDescription
 		int machineCount = problemInput.getMachineCount();
 		int jobCount = problemInput.getJobCount();
 		int machineTimeArr[] = new int[machineCount];
-		int machineSequenceLen = proDesMatrix.length;
-		int machineNoSequence[] = new int[machineSequenceLen];
+		int dnaLen=proDesMatrix.length*2;
+		int machineNoSequence[] = new int[dnaLen];
 		int[][] operationToIndex = problemInput.getOperationToIndex();// 某工件工序所对应的index
 		int start = 0, end = 0;
 		int jobNo = 0;
@@ -108,8 +108,8 @@ public class InitProblemDescription
 	{
 		int proDesMatrix[][] = problemInput.getProDesMatrix();
 		int jobCount = problemInput.getJobCount();
-		int machineSequenceLen = proDesMatrix.length;
-		int machineSequence[] = new int[machineSequenceLen];
+		int dnaLen=proDesMatrix.length*2;
+		int machineNoSequence[] = new int[dnaLen];
 		int[][] operationToIndex = problemInput.getOperationToIndex();// 某工件工序所对应的index
 		int machineCountArr[] = problemInput.getMachineCountArr();
 		int start = 0, end = 0;
@@ -138,11 +138,11 @@ public class InitProblemDescription
 					index++;
 				}
 				index--;
-				machineSequence[i] = count;
+				machineNoSequence[i] = count;
 			}
 			jobNo++;
 		}
-		return machineSequence;
+		return machineNoSequence;
 	}
 
 	/**
@@ -328,7 +328,7 @@ public class InitProblemDescription
 		for(int num:operationCountofEveryJobArr)
 			sum+=num;
 		System.out.println(sum);
-		File file=new File("proDesMatrixPro.txt");
+		File file=new File("proDesMatrixPro1.txt");
 		try
 		{
 			BufferedWriter writer=new BufferedWriter(new FileWriter(file));

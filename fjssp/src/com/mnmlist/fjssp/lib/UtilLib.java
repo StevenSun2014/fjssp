@@ -20,7 +20,7 @@ public class UtilLib {
 	 */
 	public static boolean isEnd(ProblemInfo input, int k, long startTime) {
 		int timeLimit=input.getTimeLimit();
-		if (timeLimit > 0) {
+		if (input.getIteratorCount() > 0) {
 			if (k >= input.getIteratorCount()) {
 				return true;
 			}

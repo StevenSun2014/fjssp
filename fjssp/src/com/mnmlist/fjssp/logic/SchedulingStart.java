@@ -41,7 +41,7 @@ class SchedulingStart
 		int currentBestChromesome[];
 		int bestFitness = 0;
 		int currentBestFitness = 0;
-		int loopNum = 30;// 迭代次数
+		int loopNum = input.getLoopCount();// 迭代次数
 		int dnaLen=input.getMaxOperationCount()*2;
 		int bestChromesome[] = new int[dnaLen];
 		for (int i = 0; i < loopNum; i++)

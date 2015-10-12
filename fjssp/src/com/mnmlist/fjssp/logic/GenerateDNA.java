@@ -21,7 +21,7 @@ public class GenerateDNA
 		// entries are jobNo and operation count coressponded
 		int i = 0;
 		int tempjobCount = jobCount;
-		Random generator = input.getRandom();
+		Random generator = new Random();
 		int ran = 0;
 		for (i = len; i < dnaLen; i++)
 		{

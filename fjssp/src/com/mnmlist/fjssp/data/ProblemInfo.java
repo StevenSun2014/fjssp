@@ -1,6 +1,5 @@
 package com.mnmlist.fjssp.data;
 
-import java.util.Random;
 
 public class ProblemInfo
 {
@@ -14,9 +13,9 @@ public class ProblemInfo
 	private int[][] operationToIndex;// the index of some operation of some job
 	private double crossoverRate=0.9;
 	private double mutationRate=0.05;
-	private int loopCount=20;
-	private int populationCount=100;
-	private int iteratorCount=200;
+	private int loopCount=1;
+	private int populationCount=10;
+	private int iteratorCount=5;
 	private int timeLimit=-1;//no time limit
 	private double gsRate=0.6;//global search rate
 	private double lsRate=0.3;//local search rate
@@ -68,7 +67,7 @@ public class ProblemInfo
 		return iteratorCount;
 	}
 
-	Random random=new Random();
+	//Random random=new Random();
 	public double getCrossoverRate()
 	{
 		return crossoverRate;
@@ -79,10 +78,10 @@ public class ProblemInfo
 		return mutationRate;
 	}
 
-	public Random getRandom()
-	{
-		return random;
-	}
+//	public Random getRandom()
+//	{
+//		return random;
+//	}
 
 	public int[] getOperationCountArr()
 	{

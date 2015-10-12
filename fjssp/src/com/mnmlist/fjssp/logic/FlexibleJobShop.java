@@ -24,7 +24,7 @@ public class FlexibleJobShop
 	 */
 	public BestSolution solve( ProblemInfo input)
 	{
-		Random generator = input.getRandom();
+		Random generator = new Random();
 		long startTime = System.currentTimeMillis();// start time
 		int jobCount=input.getJobCount();
 		Entry[] entries = new Entry[jobCount];// the jobNo and the operation count of given jobNo
@@ -67,13 +67,13 @@ public class FlexibleJobShop
 		int minFitness = 0;
 		i = 0;
 		fitness[0] = CaculateFitness.evaluate(dnaMatrix[i], input);
-		System.out.println("DNA length:"+dnaMatrix[0].length);
+		//System.out.println("DNA length:"+dnaMatrix[0].length);
 		minFitness = fitness[0];
 		int minIndex = 0;
 		for (i = 1; i < populationCount; i++)
 		{
 			fitness[i] = CaculateFitness.evaluate(dnaMatrix[i],input);
-			System.out.println(Arrays.toString(dnaMatrix[i]));
+			//System.out.println(Arrays.toString(dnaMatrix[i]));
 			if (fitness[i] < minFitness)
 			{
 				minFitness = fitness[i];
@@ -86,6 +86,8 @@ public class FlexibleJobShop
 		int fatherIndex = 0;
 		int motherIndex = 0;
 		int index = 0;
+		int operDnaSeq1[]=new int[totalOperationCount];
+		int operDnaSeq2[]=new int[totalOperationCount];
 		while (!UtilLib.isEnd(input,count, startTime))
 		{
 			double crossoverRate=input.getCrossoverRate();
@@ -98,7 +100,10 @@ public class FlexibleJobShop
 			{
 				fatherIndex = generator.nextInt(populationCount);
 				motherIndex = generator.nextInt(populationCount);
-				int matrix[][]=GeneOperator.fjsspCrossover(dnaMatrix[fatherIndex], dnaMatrix[motherIndex], input);
+				while(fatherIndex==motherIndex)
+					motherIndex = generator.nextInt(populationCount);
+				int matrix[][]=GeneOperator.fjsspCrossover(dnaMatrix[fatherIndex], 
+						dnaMatrix[motherIndex],operDnaSeq1,operDnaSeq2,input);
 				newDNAs[i] =matrix[0];
 				newDNAs[i + 1] = matrix[1];
 			}

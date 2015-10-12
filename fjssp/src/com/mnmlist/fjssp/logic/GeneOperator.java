@@ -1,5 +1,6 @@
 package com.mnmlist.fjssp.logic;
 
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Random;
 
@@ -18,46 +19,24 @@ public class GeneOperator {
 	 * @param ProblemInfo  descrip operation to totalIndex,the operation and the machineNo and time info .etc.
 	 * @return two feasible solutions(DNA sequence) after crosser over
 	 */
-	public static int[][]fjsspCrossover(int dna1[],int dna2[],ProblemInfo ProblemInfo)
+	public static int[][]fjsspCrossover(int dna1[],int dna2[],int operDnaSeq1[],int operDnaSeq2[],ProblemInfo ProblemInfo)
 	{
 		int newDnaArr[][]=new int[2][dna1.length];
 		int newDna1[]=newDnaArr[0];
 		int newDna2[]=newDnaArr[1];
-		System.arraycopy(dna1, 0, newDna1, 0, dna1.length);
-		System.arraycopy(dna2, 0, newDna2, 0, dna1.length);
-		Random rand=ProblemInfo.getRandom();
+		int operSequenceLen=dna1.length/2;
+		System.arraycopy(dna1, 0, newDna1, 0, operSequenceLen);
+		System.arraycopy(dna2, 0, newDna2, 0, operSequenceLen);
+		Random rand=new Random();
 		machineSeqCrossover(newDna1, newDna2, rand);
 		int jobCount=ProblemInfo.getJobCount();
-		int operationSeq1[]=operSeqCrossover(dna1, dna2, jobCount, rand);
-		int operationSeq2[]=operSeqCrossover(dna2, dna1, jobCount, rand);
-		int operSeqLen=dna1.length/2;
-		System.arraycopy(operationSeq1, 0, newDna1, operSeqLen, operSeqLen);
-		System.arraycopy(operationSeq2, 0, newDna2, operSeqLen, operSeqLen);
+		System.arraycopy(dna1, operSequenceLen, operDnaSeq1, 0, operSequenceLen);
+		System.arraycopy(dna2, operSequenceLen, operDnaSeq2, 0, operSequenceLen);
+		int newDnaOperSeq1[]=operSeqCrossover(operDnaSeq1, operDnaSeq2, jobCount, rand);
+		int newDnaOperSeq2[]=operSeqCrossover(operDnaSeq2, operDnaSeq1, jobCount, rand);
+		System.arraycopy(newDnaOperSeq1, 0, newDna1, operSequenceLen, operSequenceLen);
+		System.arraycopy(newDnaOperSeq2, 0, newDna2, operSequenceLen, operSequenceLen);
 		return newDnaArr;
-	}
-	/**
-	 * two point crossover
-	 * @param dna1 one feasible solution
-	 * @param dna2 another feasilbe solution
-	 * @param rand create random number
-	 */
-	public static void machineSeqCrossover(int dna1[], int dna2[], Random rand) {
-		int seqLen=dna1.length/2;
-		int randomIndex1=rand.nextInt(seqLen);
-		int randomIndex2=rand.nextInt(seqLen);
-		int temp=0;
-		if(randomIndex1>randomIndex2)
-		{
-			temp=randomIndex1;
-			randomIndex1=randomIndex2;
-			randomIndex2=temp;
-		}
-		for(int i=randomIndex1;i<=randomIndex2;i++)
-		{
-			temp=dna1[i];
-			dna1[i]=dna2[i];
-			dna2[i]=temp;
-		}
 	}
 	/**
 	 * @param dna1 one feasible solution
@@ -66,15 +45,17 @@ public class GeneOperator {
 	 * @param rand create random number
 	 * @return the operation sequence after cross over
 	 */
-	public static int[] operSeqCrossover(int dna1[], int dna2[],
+	public static int[] operSeqCrossover(int operDnaSeq1[], int operDnaSeq2[],
 			int jobCount, Random rand) {
-		int len = dna1.length/2;
+		int len = operDnaSeq1.length;
+//		if(len==0)
+//			System.out.println("errors in operSeqCrossover,len==0");
 		int dnaCopy[] = new int[len];
-		System.arraycopy(dna1, len, dnaCopy, 0, len);
+		System.arraycopy(operDnaSeq1, 0, dnaCopy, 0, len);
 		int newDna[] = new int[len];
 		// 生成随机的交叉起点和终点
-		int start = rand.nextInt(len)+len;
-		int end = rand.nextInt(len)+len;
+		int start = rand.nextInt(len);
+		int end = rand.nextInt(len);
 		int temp = 0;
 		if (start > end) {
 			temp = start;
@@ -100,7 +81,7 @@ public class GeneOperator {
 				indexNna2 = i % len;
 			else
 				indexNna2 = i;
-			newDna[indexNewDna++] = dna2[indexNna2];
+			newDna[indexNewDna++] = operDnaSeq2[indexNna2];
 		}
 
 		// 标记新串中要保存的旧串的值
@@ -142,11 +123,36 @@ public class GeneOperator {
 		}
 		return dnaCopy;
 	}
+	/**
+	 * two point crossover
+	 * @param dna1 one feasible solution
+	 * @param dna2 another feasilbe solution
+	 * @param rand create random number
+	 */
+	public static void machineSeqCrossover(int dna1[], int dna2[], Random rand) {
+		int seqLen=dna1.length/2;
+		int randomIndex1=rand.nextInt(seqLen);
+		int randomIndex2=rand.nextInt(seqLen);
+		int temp=0;
+		if(randomIndex1>randomIndex2)
+		{
+			temp=randomIndex1;
+			randomIndex1=randomIndex2;
+			randomIndex2=temp;
+		}
+		for(int i=randomIndex1;i<=randomIndex2;i++)
+		{
+			temp=dna1[i];
+			dna1[i]=dna2[i];
+			dna2[i]=temp;
+		}
+	}
+	
 	public static void fjsspMutation(ProblemInfo input,int []dna)
 	{
 		//the mutation of the operation sequence
 		int len=dna.length/2;
-		Random random=input.getRandom();
+		Random random=new Random();
 		int posa=random.nextInt(len);
 		int posb=random.nextInt(len);
 		while(posa==posb)

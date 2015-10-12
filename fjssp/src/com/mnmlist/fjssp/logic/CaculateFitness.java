@@ -17,26 +17,68 @@ import com.mnmlist.fjssp.lib.UtilLib;
  */
 public class CaculateFitness
 {
+	public static void main(String args[])
+	{
+		
+		int dnaSeq[]={1, 3, 2, 1, 1, 3, 1, 1, 1, 2, 1, 1, 2, 1, 2, 2, 1, 1, 1, 3, 2, 3, 1, 1, 2, 2, 2, 2, 1, 2, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 1, 1, 2, 1, 1, 3, 1, 2, 2, 2, 3, 3, 1, 2, 1, 1, 2, 0, 9, 6, 5, 8, 9, 5, 5, 8, 4, 0, 2, 5, 9, 8, 3, 1, 5, 8, 9, 0, 9, 6, 9, 8, 6, 1, 2, 3, 8, 2, 4, 5, 7, 7, 6, 1, 3, 7, 1, 7, 4, 4, 2, 0, 3, 6, 4, 0, 4, 3, 7, 0};
+		System.out.println(dnaSeq.length);
+		for(int i=0;i<55;i++)
+		{
+			if(i%20==0)
+				System.out.println();
+			System.out.print(dnaSeq[i]+", ");
+		}	
+		for(int i=0;i<55;i++)
+		{
+			if(i%20==0)
+				System.out.println();
+			System.out.print(dnaSeq[i+55]+", ");
+		}
+		File file=new File("mk01.txt");
+		ProblemInfo input=InitProblemDescription.getProblemDesFromFile(file);
+		int dnaLen=dnaSeq.length;
+		int length=dnaLen/2;
+		int jobNo=0,operNo=0;
+		int jobCount=input.getJobCount();
+		int machineNoAndTimeArr[]=new int[2];
+		int[] operNoOfEachJob = new int[jobCount];// 工种数
+		for (int i = length; i < dnaLen; i++)
+		{
+			jobNo = dnaSeq[i];// 工件名
+			operNo = operNoOfEachJob[jobNo]++;// 当前工件操作所在的工序数
+			getMachineNoAndTime(input, dnaSeq, jobNo, operNo,machineNoAndTimeArr);
+		}
+	}
 	/**
 	 * @param ProblemInfo
 	 *            the problem description which has been arranged
 	 */
-	public static void getMachineNoAndTime(ProblemInfo ProblemInfo,int dnaSeq[],
+	public static void getMachineNoAndTime(ProblemInfo input,int dnaSeq[],
 			int jobNo,int operationNo,int machineNoAndTimeArr[])
 	{
-		int[][] proDesMatrix = ProblemInfo.getProDesMatrix();
-		int operationToIndex[][]=ProblemInfo.getOperationToIndex();
+//		System.out.println(Arrays.toString(dnaSeq));
+//		System.out.println(dnaSeq.length);
+		int[][] proDesMatrix = input.getProDesMatrix();
+		int operationToIndex[][]=input.getOperationToIndex();
 		int tempCount = 0, index = 0;
 		int totaloperNo = operationToIndex[jobNo][operationNo];
 		int machineTimeArr[]=proDesMatrix[totaloperNo];
 		index = 0;
 		int count = dnaSeq[totaloperNo];
+//		if(count==6)
+//		{
+//			System.out.println("break:"+Arrays.toString(dnaSeq));
+//		}
+			
 		while (tempCount < count)
 		{
+//			if(index==6)
+//				System.out.println("break.");
 			if (machineTimeArr[index] != 0)
 				tempCount++;
 			index++;
 		}
+//		System.out.println("tempCount"+tempCount+"Count:"+count);
 		index--;
 		machineNoAndTimeArr[0]=index;
 		machineNoAndTimeArr[1]=proDesMatrix[totaloperNo][index];
