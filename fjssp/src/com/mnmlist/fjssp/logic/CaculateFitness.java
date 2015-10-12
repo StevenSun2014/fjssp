@@ -21,40 +21,39 @@ public class CaculateFitness
 	 * @param ProblemInfo
 	 *            the problem description which has been arranged
 	 */
-	public static int [] getMachineNoAndTime(ProblemInfo ProblemInfo,int dnaSeq[],int jobNo,int operationNo)
+	public static void getMachineNoAndTime(ProblemInfo ProblemInfo,int dnaSeq[],
+			int jobNo,int operationNo,int machineNoAndTimeArr[])
 	{
-		int machineNoAndTimeArr[]=new int[2];
 		int[][] proDesMatrix = ProblemInfo.getProDesMatrix();
 		int operationToIndex[][]=ProblemInfo.getOperationToIndex();
-		int count = 0, tempCount = 0, index = 0;
+		int tempCount = 0, index = 0;
 		int totaloperNo = operationToIndex[jobNo][operationNo];
+		int machineTimeArr[]=proDesMatrix[totaloperNo];
 		index = 0;
-		tempCount = 0;
-		count = dnaSeq[totaloperNo];
+		int count = dnaSeq[totaloperNo];
 		while (tempCount < count)
 		{
-			if (proDesMatrix[totaloperNo][index] != 0)
+			if (machineTimeArr[index] != 0)
 				tempCount++;
 			index++;
 		}
 		index--;
-		// machineNo=index,time=prodesMatrix[i][index]
 		machineNoAndTimeArr[0]=index;
 		machineNoAndTimeArr[1]=proDesMatrix[totaloperNo][index];
-		return machineNoAndTimeArr;
 	}
 	/**
 	 * 计算一条染色体（一个可行的调度）所耗费的最大时间
-	 * @param dna:the dna array,an element represents a procedure of a job
-	 * @param length:the DNA array length
-	 * @param input:the time and order information of the problem
+	 * @param dna the dna array,an element represents a procedure of a job
+	 * @param length the DNA array length
+	 * @param input the time and order information of the problem
 	 * @return the fitness of a sheduling
 	 */
 	public static int evaluate(int[] dna,ProblemInfo input)
 	{
 		int length=dna.length/2;
+		int dnaLen=dna.length;
 		int jobCount=input.getJobCount();
-		int operCount=input.getTotalOperationCount();
+		int operCount=input.getMaxOperationCount();
 		int machineCount=input.getMachineCount();
 		int span = -1;
 		int[] operNoOfEachJob = new int[jobCount];// 工种数
@@ -68,13 +67,14 @@ public class CaculateFitness
 		int operNo = 0;
 		int operationTime = 0;
 		int machineNo = 0;
-		for (i = 0; i < length; i++)
+		int machineNoAndTimeArr[]=new int[2];
+		for (i = length; i < dnaLen; i++)
 		{
 			jobNo = dna[i];// 工件名
 			operNo = operNoOfEachJob[jobNo]++;// 当前工件操作所在的工序数
-			int machNoTimeArr[]=getMachineNoAndTime(input, dna, jobNo, operNo);
-			machineNo=machNoTimeArr[0];
-			operationTime=machNoTimeArr[1];
+			getMachineNoAndTime(input, dna, jobNo, operNo,machineNoAndTimeArr);
+			machineNo=machineNoAndTimeArr[0];
+			operationTime=machineNoAndTimeArr[1];
 			if (operNo == 0)
 			{
 				jobOperMatrix[jobNo][operNo].jobNo = jobNo;
@@ -114,8 +114,9 @@ public class CaculateFitness
 	public static int evaluatePrint(int[] dna, ProblemInfo input)
 	{
 		int length=dna.length/2;
+		int dnaLen=dna.length;
 		int jobCount=input.getJobCount();
-		int operCount=input.getTotalOperationCount();
+		int operCount=input.getMaxOperationCount();
 		int machineCount=input.getMachineCount();
 		StringBuilder jobNoBuilder = new StringBuilder();
 		StringBuilder machineNoBuilder = new StringBuilder();
@@ -134,13 +135,14 @@ public class CaculateFitness
 		int operationTime = 0;
 		int machineNo = 0;
 		int start = 0, end = 0;
-		for (int i = 0; i < length; i++)
+		int machineNoAndTimeArr[]=new int[2];
+		for (int i = length; i < dnaLen; i++)
 		{
 			jobNo = dna[i];
 			operNo = operNoOfEachJob[jobNo]++;
-			int machNoTimeArr[]=getMachineNoAndTime(input, dna, jobNo, operNo);
-			machineNo=machNoTimeArr[0];
-			operationTime=machNoTimeArr[1];
+			getMachineNoAndTime(input, dna, jobNo, operNo,machineNoAndTimeArr);
+			machineNo=machineNoAndTimeArr[0];
+			operationTime=machineNoAndTimeArr[1];
 			jobOperMatrix[jobNo][operNo].jobNo = jobNo;
 			jobOperMatrix[jobNo][operNo].operationNo = operNo;
 			// jobOperMatrix[jobNo][operNo].machineNo
@@ -223,7 +225,8 @@ public class CaculateFitness
 			Arrays.fill(sheduleMatrix[i], ' ');
 		machineNo = 0;
 		int jobCount=input.getJobCount();
-		int operCount=input.getTotalOperationCount();
+		int operCount=input.getMaxOperationCount();
+		int machineNoAndTimeArr[]=new int[2];
 		for (p = 0; p < jobCount; p++)
 		{
 			ch = flagString.charAt(p);// 每一个工件对应一种字符
@@ -232,7 +235,8 @@ public class CaculateFitness
 				tempOperation = jobOperMatrix[p][q];
 				start = tempOperation.startTime;
 				end = tempOperation.endTime;
-				machineNo=getMachineNoAndTime(input,dna,p,q)[0];
+				getMachineNoAndTime(input,dna,p,q,machineNoAndTimeArr);
+				machineNo=machineNoAndTimeArr[0];
 				if (machineNo == -1)
 					continue;
 				for (j = start; j < end; j++)

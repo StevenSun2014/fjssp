@@ -1,9 +1,11 @@
 package com.mnmlist.fjssp.logic;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -109,7 +111,7 @@ public class InitProblemDescription
 		int machineSequenceLen = proDesMatrix.length;
 		int machineSequence[] = new int[machineSequenceLen];
 		int[][] operationToIndex = problemInput.getOperationToIndex();// 某工件工序所对应的index
-		int operationCountArr[] = problemInput.getOperationCountArr();
+		int machineCountArr[] = problemInput.getMachineCountArr();
 		int start = 0, end = 0;
 		int jobNo = 0;
 		Random random = new Random();
@@ -126,7 +128,7 @@ public class InitProblemDescription
 			}
 			for (int i = start; i <= end; i++)
 			{
-				count = random.nextInt(operationCountArr[i]) + 1;
+				count = random.nextInt(machineCountArr[i]) + 1;
 				j = 0;
 				index = 0;
 				while (j < count)
@@ -168,7 +170,7 @@ public class InitProblemDescription
 		while (listSize > 0)
 		{
 			randomIndex = random.nextInt(listSize);
-			System.out.println(randomIndex);
+			//System.out.println(randomIndex);
 			jobNo = jobNoList.get(randomIndex);
 			start = operationToIndex[jobNo][0];
 			if (jobNo != jobCount - 1)
@@ -224,21 +226,23 @@ public class InitProblemDescription
 	 */
 	public static ProblemInfo getProblemDesFromFile(File file)
 	{
-		ProblemInfo ProblemInfo = new ProblemInfo();
+		ProblemInfo input = new ProblemInfo();
 		BufferedReader reader = getBufferedReader(file);
 		String prodesStrArr[] = null;
 		int proDesMatrix[][] = null;
 		String proDesString;
 		int[] operationCountArr = null;
+		int[]machineCountArr=null;
 		List<Integer> operationCountList = new ArrayList<Integer>();
 		try
 		{
 			proDesString = reader.readLine();
 			String proDesArr[] = proDesString.split("\\s+");
 			int jobNum = Integer.valueOf(proDesArr[0]);
+			operationCountArr=new int[jobNum];
 			int machineNum = Integer.valueOf(proDesArr[1]);
-			ProblemInfo.setJobCount(jobNum);
-			ProblemInfo.setMachineCount(machineNum);
+			input.setJobCount(jobNum);
+			input.setMachineCount(machineNum);
 			prodesStrArr = new String[jobNum];
 			int count = 0;// caculate how many orders in the problem
 			int index = 0;// store the index of first blank
@@ -257,7 +261,7 @@ public class InitProblemDescription
 					maxOperationCount = tempCount;
 			}
 			int[][] operationToIndex = new int[jobNum][maxOperationCount];// 用来存储i工件j工序所对应的problemDesMatrix[][]的index
-			ProblemInfo.setMaxOperationCount(maxOperationCount);
+			input.setMaxOperationCount(maxOperationCount);
 			// ProblemInfo.setOperationCountArr(operationCountArr);
 			proDesMatrix = new int[count][];
 			String opeationDesArr[];
@@ -273,6 +277,7 @@ public class InitProblemDescription
 																	// opeartion
 																	// count of
 																	// every job
+				operationCountArr[i]=operationCount;
 				int k = 1;
 				for (int j = 0; j < operationCount; j++)
 				{
@@ -298,20 +303,46 @@ public class InitProblemDescription
 
 				}
 			}
-			operationCountArr = new int[operationTotalIndex];
 			int listSize = operationCountList.size();
+			machineCountArr=new int[listSize];
 			for (int i = 0; i < listSize; i++)
-				operationCountArr[i] = operationCountList.get(i);
-			ProblemInfo.setProDesMatrix(proDesMatrix);
-			ProblemInfo.setTotalOperationCount(proDesMatrix.length);
-			ProblemInfo.setOperationToIndex(operationToIndex);
-			ProblemInfo.setOperationCountArr(operationCountArr);
+				machineCountArr[i] = operationCountList.get(i);
+			input.setMachineCountArr(machineCountArr);
+			input.setProDesMatrix(proDesMatrix);
+			input.setTotalOperationCount(proDesMatrix.length);
+			input.setOperationToIndex(operationToIndex);
+			input.setOperationCountArr(operationCountArr);
 			reader.close();
 		} catch (IOException e)
 		{
 			e.printStackTrace();
 		}
-
-		return ProblemInfo;
+		//storeProdesInfoToDisk(input,proDesMatrix);
+		return input;
+	}
+	public static void storeProdesInfoToDisk(ProblemInfo input,int prodesMatrix[][])
+	{
+		int operationCountofEveryJobArr[]=input.getOperationCountArr();
+		int len=operationCountofEveryJobArr.length;
+		int sum=0;
+		for(int num:operationCountofEveryJobArr)
+			sum+=num;
+		System.out.println(sum);
+		File file=new File("proDesMatrixPro.txt");
+		try
+		{
+			BufferedWriter writer=new BufferedWriter(new FileWriter(file));
+			int index=0,j=0,i=0;
+			for(i=0;i<len;i++)
+			{
+				for(j=0;j<operationCountofEveryJobArr[i];j++)
+					writer.write((index+1)+"-("+i+","+(j+1)+"):"+Arrays.toString(prodesMatrix[index++])+"\n");
+			}
+			writer.close();
+		} catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

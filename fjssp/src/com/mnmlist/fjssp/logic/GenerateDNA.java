@@ -17,15 +17,16 @@ public class GenerateDNA
 	{
 		int jobCount=input.getJobCount();
 		int len=dna.length/2;
+		int dnaLen=dna.length;
 		// entries are jobNo and operation count coressponded
 		int i = 0;
 		int tempjobCount = jobCount;
 		Random generator = input.getRandom();
 		int ran = 0;
-		for (i = 0; i < len; i++)
+		for (i = len; i < dnaLen; i++)
 		{
 			ran = generator.nextInt(tempjobCount);// containerSize£ºjobcount remained
-			dna[i+len] = entries[ran].index;// generate one gene at a time
+			dna[i] = entries[ran].index;// generate one gene at a time
 			entries[ran].value--;// the operation count of some jobNo minus one
 			if (entries[ran].value == 0)
 			{

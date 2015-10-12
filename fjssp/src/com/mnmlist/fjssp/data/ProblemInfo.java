@@ -4,6 +4,7 @@ import java.util.Random;
 
 public class ProblemInfo
 {
+	private int[]machineCountArr;//how many machines can choose for every operation
 	private int[] operationCountArr;//how many operations for every job
 	private int proDesMatrix[][];//the machine no and time for every operation
 	private int machineCount; // total machine count
@@ -20,6 +21,14 @@ public class ProblemInfo
 	private double gsRate=0.6;//global search rate
 	private double lsRate=0.3;//local search rate
 	private double rsRate=0.1;//random search rate
+	public int[] getMachineCountArr()
+	{
+		return machineCountArr;
+	}
+	public void setMachineCountArr(int[] machineCountArr)
+	{
+		this.machineCountArr = machineCountArr;
+	}
 	public int getLoopCount()
 	{
 		return loopCount;
