@@ -169,11 +169,8 @@ public class FlexibleJobShop
 				minFitness = latestMinFitness;
 				minIndex = latestIndexMin;
 			}
-			//System.arraycopy(dnaMatrix[minIndex], 0, bestChromosome, 0, dnaLength);
 			count++;
 		}
-//		int tempFitness=CaculateFitness.evaluate(bestChromosome, input);
-//		System.out.println("In solve method,the fitness is:"+tempFitness);
 		BestSolution bestSolution=new BestSolution(bestChromosome,minFitness);
 		return bestSolution;
 	}
