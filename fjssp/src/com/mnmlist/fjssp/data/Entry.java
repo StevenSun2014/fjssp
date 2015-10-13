@@ -1,6 +1,10 @@
 package com.mnmlist.fjssp.data;
-
-//查找某个工种对应的机器数目
+/**
+ * @author mnmlist@163.com
+ * @blog http://blog.csdn.net/mnmlist
+ * @version v1.0
+ * store the jobNo and the operation count,use for generate one dna
+ */
 public class Entry
 {
 	public int index;// 工种号 jobNo

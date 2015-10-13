@@ -1,6 +1,10 @@
 package com.mnmlist.fjssp.data;
-
-
+/**
+ * @author mnmlist@163.com
+ * @blog http://blog.csdn.net/mnmlist
+ * @version v1.0
+ * store all the information of the problem which can be used during the scheduling process
+ */
 public class ProblemInfo
 {
 	private int[]machineCountArr;//how many machines can choose for every operation

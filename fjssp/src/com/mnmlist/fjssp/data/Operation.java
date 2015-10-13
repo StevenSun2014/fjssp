@@ -1,5 +1,10 @@
 package com.mnmlist.fjssp.data;
-
+/**
+ * @author mnmlist@163.com
+ * @blog http://blog.csdn.net/mnmlist
+ * @version v1.0
+ * store the start time and the end time of some operationNo of some job
+ */
 public class Operation
 {
 	public int jobNo;

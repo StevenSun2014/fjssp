@@ -14,6 +14,7 @@ import com.mnmlist.fjssp.lib.UtilLib;
  * @author mnmlist@163.com
  * @blog http://blog.csdn.net/mnmlist
  * @version v1.0
+ * use for caculate the fitness of the individuals
  */
 public class CaculateFitness
 {

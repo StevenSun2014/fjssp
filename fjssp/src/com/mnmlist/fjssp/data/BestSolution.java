@@ -1,5 +1,11 @@
 package com.mnmlist.fjssp.data;
 
+/**
+ * @author mnmlist@163.com
+ * @blog http://blog.csdn.net/mnmlist
+ * @version v1.0
+ * store the best individuals and the min time
+ */
 public class BestSolution
 {
 	private int[] bestChromesome;

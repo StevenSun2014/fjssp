@@ -7,6 +7,7 @@ import java.util.BitSet;
  * @author mnmlist@163.com
  * @blog http://blog.csdn.net/mnmlist
  * @version v1.0
+ * determine whether an individual can be selected according to the posibility
  */
 public class Selection
 {

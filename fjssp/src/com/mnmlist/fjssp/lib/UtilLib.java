@@ -6,6 +6,7 @@ import com.mnmlist.fjssp.data.ProblemInfo;
  * @author mnmlist@163.com
  * @blog http://blog.csdn.net/mnmlist
  * @version v1.0
+ * a tool class
  */
 public class UtilLib {
 	public static int max(int a, int b) {

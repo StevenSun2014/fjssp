@@ -13,7 +13,14 @@ import java.util.List;
 import java.util.Random;
 
 import com.mnmlist.fjssp.data.ProblemInfo;
-
+/**
+ * @author mnmlist@163.com
+ * @blog http://blog.csdn.net/mnmlist
+ * @version v1.0
+ * first:generate all the parameters of the scheduling problem from problem description file
+ * second:generate all the machine sequence for the DNA,there are three types,namely by local
+ * search,global search,random search
+ */
 public class InitProblemDescription
 {
 

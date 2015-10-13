@@ -9,6 +9,7 @@ import com.mnmlist.fjssp.data.ProblemInfo;
  * @author mnmlist@163.com
  * @blog http://blog.csdn.net/mnmlist
  * @version v1.0
+ * use for generate the 
  */
 public class GeneOperator {
 	/**

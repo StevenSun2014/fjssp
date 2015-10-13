@@ -11,6 +11,7 @@ import com.mnmlist.fjssp.lib.UtilLib;
  * @author mnmlist@163.com
  * @blog http://blog.csdn.net/mnmlist
  * @version v1.0
+ * the whole logic of the problem scheduling process
  */
 public class FlexibleJobShop
 {
