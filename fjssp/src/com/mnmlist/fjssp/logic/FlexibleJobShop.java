@@ -1,6 +1,5 @@
 package com.mnmlist.fjssp.logic;
 
-import java.util.Arrays;
 import java.util.Random;
 
 import com.mnmlist.fjssp.data.BestSolution;
@@ -52,15 +51,17 @@ public class FlexibleJobShop
 		int dnaLength = totalOperationCount*2;// the length of DNA is equal to the
 		int populationCount=input.getPopulationCount();
 		int[][] dnaMatrix = new int[populationCount][];
-		int gsCount=(int)(populationCount*input.getGsRate());
-		int lsCount=(int)(populationCount*input.getLsRate())+gsCount;
+//		int gsCount=(int)(populationCount*input.getGsRate());
+//		int lsCount=(int)(populationCount*input.getLsRate())+gsCount;
 		//create machine sequence
-		for(i=0;i<gsCount;i++)
+//		for(i=0;i<gsCount;i++)
+//			dnaMatrix[i]=InitProblemDescription.globalSearch(input);
+//		for(i=gsCount;i<lsCount;i++)
+//			dnaMatrix[i]=InitProblemDescription.localSearch(input);
+//		for(i=lsCount;i<populationCount;i++)
+//			dnaMatrix[i]=InitProblemDescription.randomSearch(input);
+		for(i=0;i<populationCount;i++)
 			dnaMatrix[i]=InitProblemDescription.globalSearch(input);
-		for(i=gsCount;i<lsCount;i++)
-			dnaMatrix[i]=InitProblemDescription.localSearch(input);
-		for(i=lsCount;i<populationCount;i++)
-			dnaMatrix[i]=InitProblemDescription.randomSearch(input);
 		// create operation sequence
 		GenerateDNA.fjsspGenerateDNAs(input,dnaMatrix, entries);
 		int[] fitness = new int[populationCount];
@@ -168,10 +169,12 @@ public class FlexibleJobShop
 				minFitness = latestMinFitness;
 				minIndex = latestIndexMin;
 			}
-			System.arraycopy(dnaMatrix[minIndex], 0, bestChromosome, 0, dnaLength);
+			//System.arraycopy(dnaMatrix[minIndex], 0, bestChromosome, 0, dnaLength);
 			count++;
 		}
-		BestSolution bestSolution = new BestSolution(bestChromosome, minFitness);
+//		int tempFitness=CaculateFitness.evaluate(bestChromosome, input);
+//		System.out.println("In solve method,the fitness is:"+tempFitness);
+		BestSolution bestSolution=new BestSolution(bestChromosome,minFitness);
 		return bestSolution;
 	}
 }// end of class GA

@@ -20,34 +20,20 @@ public class CaculateFitness
 	public static void main(String args[])
 	{
 		
-		int dnaSeq[]={1, 3, 2, 1, 1, 3, 1, 1, 1, 2, 1, 1, 2, 1, 2, 2, 1, 1, 1, 3, 2, 3, 1, 1, 2, 2, 2, 2, 1, 2, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 1, 1, 2, 1, 1, 3, 1, 2, 2, 2, 3, 3, 1, 2, 1, 1, 2, 0, 9, 6, 5, 8, 9, 5, 5, 8, 4, 0, 2, 5, 9, 8, 3, 1, 5, 8, 9, 0, 9, 6, 9, 8, 6, 1, 2, 3, 8, 2, 4, 5, 7, 7, 6, 1, 3, 7, 1, 7, 4, 4, 2, 0, 3, 6, 4, 0, 4, 3, 7, 0};
-		System.out.println(dnaSeq.length);
-		for(int i=0;i<55;i++)
+		int dna[]={1, 3, 1, 1, 1, 3, 1, 1, 1, 2, 1, 1, 2, 1, 2, 2, 1, 1, 1, 3, 2, 3, 1, 1, 1, 2, 2, 2, 1, 2, 1, 1, 2, 1, 2, 2, 3, 1, 2, 3, 1, 1, 2, 1, 1, 2, 1, 3, 1, 2, 2, 3, 1, 2, 1, 4, 9, 8, 7, 6, 2, 1, 6, 8, 3, 3, 9, 8, 9, 9, 0, 9, 2, 1, 6, 6, 2, 1, 8, 4, 5, 5, 0, 7, 4, 7, 2, 1, 4, 8, 7, 3, 5, 0, 0, 5, 5, 1, 4, 0, 4, 8, 7, 9, 6, 3, 2, 3, 5, 0};
+		int newDna1[]={1, 3, 2, 1, 1, 3, 1, 1, 1, 2, 1, 1, 2, 1, 2, 2, 1, 1, 1, 3, 2, 3, 1, 1, 2, 2, 2, 1, 1, 2, 1, 1, 1, 1, 1, 2, 3, 1, 2, 2, 1, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 3, 1, 2, 1, 4, 5, 8, 9, 9, 8, 8, 9, 0, 0, 6, 7, 2, 1, 8, 9, 9, 3, 1, 4, 1, 1, 5, 7, 6, 8, 0, 3, 2, 4, 5, 0, 1, 0, 4, 7, 6, 4, 6, 5, 3, 2, 5, 6, 7, 9, 5, 8, 3, 2, 0, 4, 2, 7, 3};
+		int newDna2[]={1, 3, 2, 1, 1, 3, 1, 1, 1, 2, 1, 1, 2, 1, 2, 2, 1, 1, 1, 3, 2, 3, 1, 1, 2, 2, 2, 1, 1, 2, 1, 1, 1, 1, 1, 2, 3, 1, 2, 2, 1, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 3, 1, 2, 1, 4, 5, 8, 9, 9, 8, 8, 9, 0, 0, 6, 7, 2, 1, 8, 9, 9, 3, 1, 4, 1, 1, 5, 7, 6, 8, 0, 3, 2, 4, 5, 0, 1, 0, 4, 7, 6, 4, 6, 5, 3, 2, 5, 6, 7, 9, 5, 8, 3, 2, 0, 4, 2, 7, 3};
+		for(int i=0;i<newDna1.length;i++)
 		{
-			if(i%20==0)
-				System.out.println();
-			System.out.print(dnaSeq[i]+", ");
-		}	
-		for(int i=0;i<55;i++)
-		{
-			if(i%20==0)
-				System.out.println();
-			System.out.print(dnaSeq[i+55]+", ");
+			if(newDna1[i]!=newDna2[i])
+				System.out.println("Error");
 		}
 		File file=new File("mk01.txt");
 		ProblemInfo input=InitProblemDescription.getProblemDesFromFile(file);
-		int dnaLen=dnaSeq.length;
-		int length=dnaLen/2;
-		int jobNo=0,operNo=0;
-		int jobCount=input.getJobCount();
-		int machineNoAndTimeArr[]=new int[2];
-		int[] operNoOfEachJob = new int[jobCount];// 工种数
-		for (int i = length; i < dnaLen; i++)
-		{
-			jobNo = dnaSeq[i];// 工件名
-			operNo = operNoOfEachJob[jobNo]++;// 当前工件操作所在的工序数
-			getMachineNoAndTime(input, dnaSeq, jobNo, operNo,machineNoAndTimeArr);
-		}
+		int span1=evaluate(newDna2, input);
+		int span2=evaluatePrint(newDna2, input);
+		System.out.println("Span1:"+span1);
+		System.out.println("Span2:"+span2);
 	}
 	/**
 	 * @param ProblemInfo
@@ -196,10 +182,9 @@ public class CaculateFitness
 						.max(jobOperMatrix[jobNo][operNo - 1].endTime,
 								machFreeTime[machineNo]);
 			jobOperMatrix[jobNo][operNo].startTime = start;
-			end = jobOperMatrix[jobNo][operNo].startTime
-					+ operationTime;
+			end = start+ operationTime;
 			jobOperMatrix[jobNo][operNo].endTime = end;
-			machFreeTime[machineNo] = jobOperMatrix[jobNo][operNo].endTime;
+			machFreeTime[machineNo] = end;
 			if (jobOperMatrix[jobNo][operNo].endTime > span)
 			{
 				span = jobOperMatrix[jobNo][operNo].endTime;
