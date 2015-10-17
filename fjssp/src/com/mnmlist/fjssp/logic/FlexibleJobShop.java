@@ -1,5 +1,6 @@
 package com.mnmlist.fjssp.logic;
 
+import java.util.Arrays;
 import java.util.Random;
 
 import com.mnmlist.fjssp.data.BestSolution;
@@ -156,6 +157,7 @@ public class FlexibleJobShop
 			int latestIndexMin = 0;
 			for (i = 1; i <populationCount; i++)
 			{
+				//System.out.println(Arrays.toString(dnaMatrix[i]));
 				fitness[i] = CaculateFitness.evaluate(dnaMatrix[i],input);
 				if (fitness[i] < latestMinFitness)
 				{

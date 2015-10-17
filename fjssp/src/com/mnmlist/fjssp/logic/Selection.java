@@ -36,7 +36,6 @@ public class Selection
 			}
 		}
 		// find the number of save minimum value
-		//int[] flag = new int[length];
 		BitSet flag=new BitSet();
 		int sameCount = 0;
 		for (i = 0; i < length; i++)

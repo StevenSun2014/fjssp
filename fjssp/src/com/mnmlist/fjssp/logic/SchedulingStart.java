@@ -13,10 +13,13 @@ import com.mnmlist.fjssp.data.ProblemInfo;
  */
 class SchedulingStart
 {
+	/**
+	 * beginning of the flexible job shop scheduling problem system. 
+	 */
 	public static void main(String args[])
 	{
-		//get the problem description,such as populationCount,crossoverRate,mutationRate
 		File file=new File("mk01.txt");
+		//get the problem description,such as populationCount,crossoverRate,mutationRate
 		ProblemInfo input=InitProblemDescription.getProblemDesFromFile(file);
 		//get the input parameter ,such as the order,the job
 		SchedulingStart.schedulingBegin(input);
@@ -50,8 +53,6 @@ class SchedulingStart
 			BestSolution bestSolution = fjssp.solve( input);
 			currentBestChromesome = bestSolution.getBestChromesome();
 			currentBestFitness = bestSolution.getBestFitness();
-//			int newFitness=CaculateFitness.evaluate(currentBestChromesome, input);
-//			System.out.println("Old fitness:"+currentBestFitness+",New fitness:"+newFitness);
 			if (i == 0)
 			{
 				bestFitness = currentBestFitness;

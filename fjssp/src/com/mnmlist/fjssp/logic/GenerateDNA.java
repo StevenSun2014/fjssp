@@ -13,6 +13,11 @@ import com.mnmlist.fjssp.data.ProblemInfo;
 public class GenerateDNA
 {
 
+	/**
+	 * @param input the problem description
+	 * @param dna a feasible individual
+	 * @param entries use to create the operation sequence
+	 */
 	public static void fjsspGenerateOneDNA(ProblemInfo input, int[] dna,Entry[] entries)
 	{
 		int jobCount=input.getJobCount();

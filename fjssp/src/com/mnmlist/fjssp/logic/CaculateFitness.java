@@ -20,21 +20,21 @@ public class CaculateFitness
 {
 	public static void main(String args[])
 	{
-		
-		int dna[]={1, 3, 1, 1, 1, 3, 1, 1, 1, 2, 1, 1, 2, 1, 2, 2, 1, 1, 1, 3, 2, 3, 1, 1, 1, 2, 2, 2, 1, 2, 1, 1, 2, 1, 2, 2, 3, 1, 2, 3, 1, 1, 2, 1, 1, 2, 1, 3, 1, 2, 2, 3, 1, 2, 1, 4, 9, 8, 7, 6, 2, 1, 6, 8, 3, 3, 9, 8, 9, 9, 0, 9, 2, 1, 6, 6, 2, 1, 8, 4, 5, 5, 0, 7, 4, 7, 2, 1, 4, 8, 7, 3, 5, 0, 0, 5, 5, 1, 4, 0, 4, 8, 7, 9, 6, 3, 2, 3, 5, 0};
-		int newDna1[]={1, 3, 2, 1, 1, 3, 1, 1, 1, 2, 1, 1, 2, 1, 2, 2, 1, 1, 1, 3, 2, 3, 1, 1, 2, 2, 2, 1, 1, 2, 1, 1, 1, 1, 1, 2, 3, 1, 2, 2, 1, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 3, 1, 2, 1, 4, 5, 8, 9, 9, 8, 8, 9, 0, 0, 6, 7, 2, 1, 8, 9, 9, 3, 1, 4, 1, 1, 5, 7, 6, 8, 0, 3, 2, 4, 5, 0, 1, 0, 4, 7, 6, 4, 6, 5, 3, 2, 5, 6, 7, 9, 5, 8, 3, 2, 0, 4, 2, 7, 3};
-		int newDna2[]={1, 3, 2, 1, 1, 3, 1, 1, 1, 2, 1, 1, 2, 1, 2, 2, 1, 1, 1, 3, 2, 3, 1, 1, 2, 2, 2, 1, 1, 2, 1, 1, 1, 1, 1, 2, 3, 1, 2, 2, 1, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 3, 1, 2, 1, 4, 5, 8, 9, 9, 8, 8, 9, 0, 0, 6, 7, 2, 1, 8, 9, 9, 3, 1, 4, 1, 1, 5, 7, 6, 8, 0, 3, 2, 4, 5, 0, 1, 0, 4, 7, 6, 4, 6, 5, 3, 2, 5, 6, 7, 9, 5, 8, 3, 2, 0, 4, 2, 7, 3};
-		for(int i=0;i<newDna1.length;i++)
-		{
-			if(newDna1[i]!=newDna2[i])
-				System.out.println("Error");
-		}
+		int dna[]={1, 3, 2, 1, 1, 3, 1, 1, 1, 2, 1, 1, 1, 1, 2, 2, 1, 1, 1, 3, 2, 3, 1, 1, 1, 2, 3, 2, 1, 2, 1, 1, 2, 1, 2, 2, 3, 1, 1, 2, 1, 2, 2, 1, 2, 1, 1, 3, 2, 2, 2, 3, 1, 2, 2, 9, 5, 9, 8, 1, 7, 1, 3, 8, 5, 6, 4, 5, 3, 7, 7, 2, 1, 1, 0, 5, 1, 5, 8, 6, 7, 3, 2, 6, 9, 9, 2, 3, 4, 2, 5, 0, 6, 7, 0, 6, 4, 8, 9, 0, 8, 2, 4, 3, 0, 4, 0, 8, 9, 4};
+//		int machineSeq[]=new int[55];
+//		int operationSeq[]=new int[55];
+//		System.arraycopy(dna, 0, machineSeq, 0, 55);
+//		System.arraycopy(dna, 55, operationSeq, 0, 55);
+//		System.out.println(Arrays.toString(machineSeq));
+//		System.out.println(Arrays.toString(operationSeq));
+//		int countArr[]=new int[10];
+//		for(int i=55;i<110;i++)
+//			countArr[dna[i]]++;
+//		System.out.println(Arrays.toString(countArr));
 		File file=new File("mk01.txt");
+		//get the problem description,such as populationCount,crossoverRate,mutationRate
 		ProblemInfo input=InitProblemDescription.getProblemDesFromFile(file);
-		int span1=evaluate(newDna2, input);
-		int span2=evaluatePrint(newDna2, input);
-		System.out.println("Span1:"+span1);
-		System.out.println("Span2:"+span2);
+		evaluate(dna, input);
 	}
 	/**
 	 * @param ProblemInfo
@@ -43,8 +43,7 @@ public class CaculateFitness
 	public static void getMachineNoAndTime(ProblemInfo input,int dnaSeq[],
 			int jobNo,int operationNo,int machineNoAndTimeArr[])
 	{
-//		System.out.println(Arrays.toString(dnaSeq));
-//		System.out.println(dnaSeq.length);
+		//System.out.println(Arrays.toString(dnaSeq));
 		int[][] proDesMatrix = input.getProDesMatrix();
 		int operationToIndex[][]=input.getOperationToIndex();
 		int tempCount = 0, index = 0;
@@ -52,20 +51,12 @@ public class CaculateFitness
 		int machineTimeArr[]=proDesMatrix[totaloperNo];
 		index = 0;
 		int count = dnaSeq[totaloperNo];
-//		if(count==6)
-//		{
-//			System.out.println("break:"+Arrays.toString(dnaSeq));
-//		}
-			
 		while (tempCount < count)
 		{
-//			if(index==6)
-//				System.out.println("break.");
 			if (machineTimeArr[index] != 0)
 				tempCount++;
 			index++;
 		}
-//		System.out.println("tempCount"+tempCount+"Count:"+count);
 		index--;
 		machineNoAndTimeArr[0]=index;
 		machineNoAndTimeArr[1]=proDesMatrix[totaloperNo][index];
@@ -79,6 +70,7 @@ public class CaculateFitness
 	 */
 	public static int evaluate(int[] dna,ProblemInfo input)
 	{
+		//System.out.println(Arrays.toString(dna));
 		int length=dna.length/2;
 		int dnaLen=dna.length;
 		int jobCount=input.getJobCount();
@@ -99,8 +91,10 @@ public class CaculateFitness
 		int machineNoAndTimeArr[]=new int[2];
 		for (i = length; i < dnaLen; i++)
 		{
+			//System.out.println(i);
 			jobNo = dna[i];// 工件名
 			operNo = operNoOfEachJob[jobNo]++;// 当前工件操作所在的工序数
+			//System.out.println("i="+i+",JobNo "+jobNo+",OperNo "+operNo);
 			getMachineNoAndTime(input, dna, jobNo, operNo,machineNoAndTimeArr);
 			machineNo=machineNoAndTimeArr[0];
 			operationTime=machineNoAndTimeArr[1];
@@ -108,8 +102,6 @@ public class CaculateFitness
 			{
 				jobOperMatrix[jobNo][operNo].jobNo = jobNo;
 				jobOperMatrix[jobNo][operNo].operationNo = operNo;
-				// jobOperMatrix[jobNo][operNo].machineNo
-				// = machineNo;
 				jobOperMatrix[jobNo][operNo].startTime = machFreeTime[machineNo];
 				jobOperMatrix[jobNo][operNo].endTime = jobOperMatrix[jobNo][operNo].startTime
 						+ operationTime;
@@ -117,8 +109,6 @@ public class CaculateFitness
 			{
 				jobOperMatrix[jobNo][operNo].jobNo = jobNo;
 				jobOperMatrix[jobNo][operNo].operationNo = operNo;
-				// jobOperMatrix[jobNo][operNo].machineNo
-				// = machineNo;
 				jobOperMatrix[jobNo][operNo].startTime = UtilLib
 						.max(jobOperMatrix[jobNo][operNo - 1].endTime,
 								machFreeTime[machineNo]);
@@ -174,8 +164,6 @@ public class CaculateFitness
 			operationTime=machineNoAndTimeArr[1];
 			jobOperMatrix[jobNo][operNo].jobNo = jobNo;
 			jobOperMatrix[jobNo][operNo].operationNo = operNo;
-			// jobOperMatrix[jobNo][operNo].machineNo
-			// = machineNo;
 			if (operNo == 0)
 				start = machFreeTime[machineNo];
 			else
@@ -201,7 +189,7 @@ public class CaculateFitness
 			endTimeBuilder.append(end - start + " ");
 		}
 		printSchedPicInConsole(input,dna, jobOperMatrix);
-		// storeToDisk(machineNoBuilder, jobNoBuilder, startTimeBuilder,endTimeBuilder);
+		storeToDisk(machineNoBuilder, jobNoBuilder, startTimeBuilder,endTimeBuilder);
 		return span;
 
 	}

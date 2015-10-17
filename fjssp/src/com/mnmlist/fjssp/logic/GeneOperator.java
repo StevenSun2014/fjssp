@@ -1,5 +1,7 @@
 package com.mnmlist.fjssp.logic;
 
+import java.io.File;
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Random;
 
@@ -12,6 +14,30 @@ import com.mnmlist.fjssp.data.ProblemInfo;
  * use for generate the 
  */
 public class GeneOperator {
+	public static void main(String args[])
+	{
+		//int dna1[]={1, 3, 2, 3, 1, 2, 1, 1, 1, 2, 1, 1, 2, 1, 3, 2, 1, 1, 1, 3, 2, 3, 1, 1, 2, 2, 2, 1, 1, 2, 1, 1, 2, 1, 1, 2, 3, 1, 2, 2, 1, 1, 2, 1, 1, 2, 1, 2, 1, 2, 1, 3, 1, 1, 3, 6, 5, 8, 4, 3, 0, 1, 8, 8, 5, 3, 3, 5, 2, 8, 2, 5, 0, 3, 7, 8, 8, 0, 3, 1, 5, 6, 9, 2, 4, 2, 1, 2, 5, 0, 7, 4, 0, 0, 6, 7, 9, 6, 7, 4, 1, 9, 1, 4, 4, 6, 9, 7, 9, 9};
+		int dna[]={1, 3, 2, 1, 1, 3, 1, 1, 1, 2, 1, 1, 1, 1, 2, 2, 1, 1, 1, 3, 2, 3, 1, 1, 1, 2, 3, 2, 1, 2, 1, 1, 2, 1, 2, 2, 3, 1, 1, 2, 1, 2, 2, 1, 2, 1, 1, 3, 2, 2, 2, 3, 1, 2, 2, 9, 5, 9, 8, 1, 7, 1, 3, 8, 5, 6, 4, 5, 3, 7, 7, 2, 1, 1, 0, 5, 1, 5, 8, 6, 7, 3, 2, 6, 9, 9, 2, 3, 4, 2, 5, 0, 6, 7, 0, 6, 4, 8, 9, 0, 8, 2, 4, 3, 0, 4, 0, 8, 9, 4};
+		//dna[41]=1;
+		File file=new File("mk01.txt");
+		//get the problem description,such as populationCount,crossoverRate,mutationRate
+		ProblemInfo input=InitProblemDescription.getProblemDesFromFile(file);
+		int maxOperationCount[]=input.getMachineCountArr();
+		
+//		CaculateFitness.evaluate(dna, input);
+//		int len=dna.length/2;
+//		for(int i=0;i<len;i++)
+//		{
+//			machineSeqMutation(dna,input,i);
+//		}
+		machineSeqMutation(dna, input, 41);
+		for(int i=0;i<55;i++)
+		{
+			if(maxOperationCount[i]<dna[i])
+				System.out.println("Error.");
+			System.out.println("maxCount:"+maxOperationCount[i]+","+(i+1)+"th:"+dna[i]);
+		}
+	}
 	/**
 	 * flexible job shop crossover method,include machine sequence and operation sequence crossover
 	 * @param dna1 one feasible solution
@@ -128,6 +154,7 @@ public class GeneOperator {
 	 * @param rand create random number
 	 */
 	public static void machineSeqCrossover(int dna1[], int dna2[], Random rand) {
+		//System.out.println(Arrays.toString(dna1));
 		int seqLen=dna1.length/2;
 		int randomIndex1=rand.nextInt(seqLen);
 		int randomIndex2=rand.nextInt(seqLen);
@@ -162,7 +189,7 @@ public class GeneOperator {
 			posa=posb;
 			posb=temp;
 		}
-		operSeqMutation(dna,posa,posb);
+		operSeqMutation(dna,posa+len,posb+len);
 		//the mutation of the machine sequence
 		posa=random.nextInt(len);
 		machineSeqMutation(dna,input,posa);
@@ -179,24 +206,23 @@ public class GeneOperator {
 	}
 	/**
 	 * @param dna one feasible solution
-	 * @param proDesMatrix descrip the operation and the machineNo and time info .etc.
+	 * @param input descrip the operation and the machineNo and time info .etc.
 	 * @param position the mutation index of the machine sequence 
 	 */
-	public static void machineSeqMutation(int[] dna, ProblemInfo ProblemInfo,int position) {
-		int machineNoTimeArr[]=ProblemInfo.getProDesMatrix()[position];
+	public static void machineSeqMutation(int[] dna, ProblemInfo input,int position) {
+		int machineNoTimeArr[]=input.getProDesMatrix()[position];
 		int index=0;
 		while(machineNoTimeArr[index]==0)index++;
 		int min=machineNoTimeArr[index];
 		for(int i=index+1;i<machineNoTimeArr.length;i++)
 		{
-			if(machineNoTimeArr[i]!=0)
+			if(machineNoTimeArr[i]!=0&&machineNoTimeArr[i]<min)
 			{
-				if(min>machineNoTimeArr[i])
-					min=machineNoTimeArr[i];
+				min=machineNoTimeArr[i];
 			}
 		}
 		int count=0;
-		for(int i=0;i<machineNoTimeArr.length;i++)
+		for(int i=index;i<machineNoTimeArr.length;i++)
 		{
 			if(machineNoTimeArr[i]!=0)
 			{
