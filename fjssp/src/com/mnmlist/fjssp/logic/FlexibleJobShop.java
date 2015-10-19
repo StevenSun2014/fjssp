@@ -1,5 +1,6 @@
 package com.mnmlist.fjssp.logic;
 
+import java.util.Arrays;
 import java.util.Random;
 
 import com.mnmlist.fjssp.data.BestSolution;
@@ -98,9 +99,16 @@ public class FlexibleJobShop
 		double mutationRate=input.getMutationRate();
 		int randomIndex=0;
 		int mutationCount=(int)(mutationRate*populationCount);
+		int[][] newDNAs = new int[crossCount][dnaLength];
+		int[] newFitness = new int[crossCount];
+		int allLength = populationCount + crossCount;
+		int[] allFitness = new int[allLength];
+		double[] allProbabilities = new double[allLength];
+		int[] perSelectCount = new int[allLength];
+		int[][] nextGen = new int[populationCount][dnaLength];
 		while (!UtilLib.isEnd(input,count, startTime))
 		{
-			int[][] newDNAs = new int[crossCount][dnaLength];
+			//gene Crossover
 			for (i = 0; i < crossCount; i += 2)
 			{
 				fatherIndex = generator.nextInt(populationCount);
@@ -109,8 +117,8 @@ public class FlexibleJobShop
 					motherIndex = generator.nextInt(populationCount);
 				int matrix[][]=GeneOperator.fjsspCrossover(dnaMatrix[fatherIndex], 
 						dnaMatrix[motherIndex],operDnaSeq1,operDnaSeq2,input);
-				newDNAs[i] =matrix[0];
-				newDNAs[i + 1] = matrix[1];
+				System.arraycopy(matrix[0], 0, newDNAs[i], 0, dnaLength);
+				System.arraycopy(matrix[1], 0, newDNAs[i+1], 0, dnaLength);
 			}
 			// gene mutation
 			for(i=0;i<mutationCount;i++)
@@ -118,19 +126,15 @@ public class FlexibleJobShop
 				randomIndex=generator.nextInt(populationCount);
 				GeneOperator.fjsspMutation(input, dnaMatrix[randomIndex]);
 			}
-			int[] newFitness = new int[crossCount];
 			for (i = 0; i < crossCount; i++)
 				newFitness[i] = CaculateFitness.evaluate(newDNAs[i],input,operationMatrix);
-			int allLength = populationCount + crossCount;
-			int[] allFitness = new int[allLength];
 			System.arraycopy(fitness, 0, allFitness, 0,populationCount);
 			System.arraycopy(newFitness, 0, allFitness,populationCount, crossCount);
-			double[] allProbabilities = new double[allLength];
+			Arrays.fill(allProbabilities, 0);
 			Selection.transformFitnessToDistribution(allFitness,allProbabilities);
 			double start = generator.nextDouble();
-			int[] perSelectCount = new int[allLength];
+			Arrays.fill(perSelectCount, 0);
 			Selection.selection(allProbabilities, populationCount,start, perSelectCount);
-			int[][] nextGen = new int[populationCount][dnaLength];
 			index = 0;
 			for (i = 0; i < populationCount; i++)
 			{
