@@ -49,9 +49,16 @@ class SchedulingStart
 		int loopNum = input.getLoopCount();// µü´ú´ÎÊý
 		int dnaLen=input.getTotalOperationCount()*2;
 		int bestChromesome[] = new int[dnaLen];
-		for (int i = 0; i < loopNum; i++)
+		int jobCount=input.getJobCount();
+		int maxOperationCount=input.getMaxOperationCount();
+		Operation[][] operationMatrix = new Operation[jobCount][maxOperationCount];
+		int i=0,j=0;
+		for (i = 0; i < jobCount; i++)
+			for (j = 0; j < maxOperationCount; j++)
+				operationMatrix[i][j] = new Operation();
+		for (i = 0; i < loopNum; i++)
 		{
-			BestSolution bestSolution = fjssp.solve( input);
+			BestSolution bestSolution = fjssp.solve( input,operationMatrix);
 			currentBestChromesome = bestSolution.getBestChromesome();
 			currentBestFitness = bestSolution.getBestFitness();
 			if (i == 0)
@@ -80,12 +87,7 @@ class SchedulingStart
 				+ " generation the best fitness is " + bestFitness);
 		System.out.println("the final and best chromesome is as follows...");
 		System.out.println(Arrays.toString(bestChromesome));
-		int jobCount=input.getJobCount();
-		int maxOperationCount=input.getMaxOperationCount();
-		Operation[][] operationMatrix = new Operation[jobCount][maxOperationCount];
-		for (int p = 0; p < jobCount; p++)
-			for (int q = 0; q < maxOperationCount; q++)
-				operationMatrix[p][q] = new Operation();
+		CaculateFitness.initOperationMatrix(operationMatrix);
 		CaculateFitness.evaluatePrint(bestChromesome,input,operationMatrix);
 	}
 }

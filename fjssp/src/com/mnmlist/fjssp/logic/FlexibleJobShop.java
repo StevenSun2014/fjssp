@@ -23,7 +23,7 @@ public class FlexibleJobShop
 	 * @return
 	 * 			the best solution for this iteration
 	 */
-	public BestSolution solve( ProblemInfo input)
+	public BestSolution solve( ProblemInfo input,Operation[][] operationMatrix)
 	{
 		int i=0,j=0;
 		Random generator = new Random();
@@ -49,7 +49,6 @@ public class FlexibleJobShop
 			}
 			operationCount=OperIndexEnd-OperIndexStart+1;
 			entries[i].value=operationCount;
-			//totalOperationCount += operationCount;
 		}
 		int dnaLength = totalOperationCount*2;// the length of DNA is equal to the
 		int populationCount=input.getPopulationCount();
@@ -69,12 +68,7 @@ public class FlexibleJobShop
 		GenerateDNA.fjsspGenerateDNAs(input,dnaMatrix, entries);
 		int[] fitness = new int[populationCount];
 		int minFitness = 0;
-		int maxOperationCount=input.getMaxOperationCount();
-		Operation[][] operationMatrix = new Operation[jobCount][maxOperationCount];
-		for (i = 0; i < jobCount; i++)
-			for (j = 0; j < maxOperationCount; j++)
-				operationMatrix[i][j] = new Operation();
-		fitness[0] = CaculateFitness.evaluate(dnaMatrix[i], input,operationMatrix);
+		fitness[0] = CaculateFitness.evaluate(dnaMatrix[0], input,operationMatrix);
 		//System.out.println("DNA length:"+dnaMatrix[0].length);
 		minFitness = fitness[0];
 		int minIndex = 0;
@@ -96,13 +90,16 @@ public class FlexibleJobShop
 		int index = 0;
 		int operDnaSeq1[]=new int[totalOperationCount];
 		int operDnaSeq2[]=new int[totalOperationCount];
+		double crossoverRate=input.getCrossoverRate();
+		// gene crossover
+		int crossCount = (int) (populationCount * crossoverRate);
+		if ((crossCount & 1) == 1)
+			crossCount--;
+		double mutationRate=input.getMutationRate();
+		int randomIndex=0;
+		int mutationCount=(int)(mutationRate*populationCount);
 		while (!UtilLib.isEnd(input,count, startTime))
 		{
-			double crossoverRate=input.getCrossoverRate();
-			// gene crossover
-			int crossCount = (int) (populationCount * crossoverRate);
-			if ((crossCount & 1) == 1)
-				crossCount--;
 			int[][] newDNAs = new int[crossCount][dnaLength];
 			for (i = 0; i < crossCount; i += 2)
 			{
@@ -116,9 +113,6 @@ public class FlexibleJobShop
 				newDNAs[i + 1] = matrix[1];
 			}
 			// gene mutation
-			double mutationRate=input.getMutationRate();
-			int randomIndex=0;
-			int mutationCount=(int)(mutationRate*populationCount);
 			for(i=0;i<mutationCount;i++)
 			{
 				randomIndex=generator.nextInt(populationCount);
