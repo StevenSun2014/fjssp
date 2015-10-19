@@ -1,10 +1,10 @@
 package com.mnmlist.fjssp.logic;
 
-import java.util.Arrays;
 import java.util.Random;
 
 import com.mnmlist.fjssp.data.BestSolution;
 import com.mnmlist.fjssp.data.Entry;
+import com.mnmlist.fjssp.data.Operation;
 import com.mnmlist.fjssp.data.ProblemInfo;
 import com.mnmlist.fjssp.lib.UtilLib;
 
@@ -25,6 +25,7 @@ public class FlexibleJobShop
 	 */
 	public BestSolution solve( ProblemInfo input)
 	{
+		int i=0,j=0;
 		Random generator = new Random();
 		long startTime = System.currentTimeMillis();// start time
 		int jobCount=input.getJobCount();
@@ -35,7 +36,7 @@ public class FlexibleJobShop
 		}
 		int totalOperationCount = input.getTotalOperationCount();
 		int[][] operationToIndex= input.getOperationToIndex();//jobNo and operNo to index
-		int OperIndexStart=0,OperIndexEnd=0,operationCount=0,i=0;
+		int OperIndexStart=0,OperIndexEnd=0,operationCount=0;
 		for (; i < jobCount; i++)
 		{
 			entries[i].index=i;
@@ -55,7 +56,7 @@ public class FlexibleJobShop
 		int[][] dnaMatrix = new int[populationCount][];
 //		int gsCount=(int)(populationCount*input.getGsRate());
 //		int lsCount=(int)(populationCount*input.getLsRate())+gsCount;
-		//create machine sequence
+//		//create machine sequence
 //		for(i=0;i<gsCount;i++)
 //			dnaMatrix[i]=InitProblemDescription.globalSearch(input);
 //		for(i=gsCount;i<lsCount;i++)
@@ -68,14 +69,18 @@ public class FlexibleJobShop
 		GenerateDNA.fjsspGenerateDNAs(input,dnaMatrix, entries);
 		int[] fitness = new int[populationCount];
 		int minFitness = 0;
-		i = 0;
-		fitness[0] = CaculateFitness.evaluate(dnaMatrix[i], input);
+		int maxOperationCount=input.getMaxOperationCount();
+		Operation[][] operationMatrix = new Operation[jobCount][maxOperationCount];
+		for (i = 0; i < jobCount; i++)
+			for (j = 0; j < maxOperationCount; j++)
+				operationMatrix[i][j] = new Operation();
+		fitness[0] = CaculateFitness.evaluate(dnaMatrix[i], input,operationMatrix);
 		//System.out.println("DNA length:"+dnaMatrix[0].length);
 		minFitness = fitness[0];
 		int minIndex = 0;
 		for (i = 1; i < populationCount; i++)
 		{
-			fitness[i] = CaculateFitness.evaluate(dnaMatrix[i],input);
+			fitness[i] = CaculateFitness.evaluate(dnaMatrix[i],input,operationMatrix);
 			//System.out.println(Arrays.toString(dnaMatrix[i]));
 			if (fitness[i] < minFitness)
 			{
@@ -121,7 +126,7 @@ public class FlexibleJobShop
 			}
 			int[] newFitness = new int[crossCount];
 			for (i = 0; i < crossCount; i++)
-				newFitness[i] = CaculateFitness.evaluate(newDNAs[i],input);
+				newFitness[i] = CaculateFitness.evaluate(newDNAs[i],input,operationMatrix);
 			int allLength = populationCount + crossCount;
 			int[] allFitness = new int[allLength];
 			System.arraycopy(fitness, 0, allFitness, 0,populationCount);
@@ -133,7 +138,6 @@ public class FlexibleJobShop
 			Selection.selection(allProbabilities, populationCount,start, perSelectCount);
 			int[][] nextGen = new int[populationCount][dnaLength];
 			index = 0;
-			int j = 0;
 			for (i = 0; i < populationCount; i++)
 			{
 				for (j = 0; j < perSelectCount[i]; j++)
@@ -153,12 +157,12 @@ public class FlexibleJobShop
 			}
 			for (int p = 0; p <populationCount; p++)
 				System.arraycopy(nextGen[p], 0, dnaMatrix[p], 0, dnaLength);
-			int latestMinFitness = CaculateFitness.evaluate(dnaMatrix[0],input);
+			int latestMinFitness = CaculateFitness.evaluate(dnaMatrix[0],input,operationMatrix);
 			int latestIndexMin = 0;
 			for (i = 1; i <populationCount; i++)
 			{
 				//System.out.println(Arrays.toString(dnaMatrix[i]));
-				fitness[i] = CaculateFitness.evaluate(dnaMatrix[i],input);
+				fitness[i] = CaculateFitness.evaluate(dnaMatrix[i],input,operationMatrix);
 				if (fitness[i] < latestMinFitness)
 				{
 					latestMinFitness = fitness[i];

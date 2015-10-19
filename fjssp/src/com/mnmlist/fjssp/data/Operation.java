@@ -19,4 +19,11 @@ public class Operation
 		startTime = -1;
 		endTime = -1;
 	}
+	public void initOperation()
+	{
+		jobNo = -1;
+		operationNo = -1;
+		startTime = -1;
+		endTime = -1;
+	}
 }

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Arrays;
 
 import com.mnmlist.fjssp.data.BestSolution;
+import com.mnmlist.fjssp.data.Operation;
 import com.mnmlist.fjssp.data.ProblemInfo;
 
 /**
@@ -79,6 +80,12 @@ class SchedulingStart
 				+ " generation the best fitness is " + bestFitness);
 		System.out.println("the final and best chromesome is as follows...");
 		System.out.println(Arrays.toString(bestChromesome));
-		CaculateFitness.evaluatePrint(bestChromesome,input);
+		int jobCount=input.getJobCount();
+		int maxOperationCount=input.getMaxOperationCount();
+		Operation[][] operationMatrix = new Operation[jobCount][maxOperationCount];
+		for (int p = 0; p < jobCount; p++)
+			for (int q = 0; q < maxOperationCount; q++)
+				operationMatrix[p][q] = new Operation();
+		CaculateFitness.evaluatePrint(bestChromesome,input,operationMatrix);
 	}
 }

@@ -34,7 +34,7 @@ public class CaculateFitness
 		File file=new File("mk01.txt");
 		//get the problem description,such as populationCount,crossoverRate,mutationRate
 		ProblemInfo input=InitProblemDescription.getProblemDesFromFile(file);
-		evaluate(dna, input);
+//		evaluate(dna, input);
 	}
 	/**
 	 * @param ProblemInfo
@@ -62,27 +62,35 @@ public class CaculateFitness
 		machineNoAndTimeArr[1]=proDesMatrix[totaloperNo][index];
 	}
 	/**
+	 * @param operationMatrix the operation description of the scheduling problem
+	 */
+	public static void initOperationMatrix(Operation[][] operationMatrix)
+	{
+		int i=0,j=0;
+		for(i=0;i<operationMatrix.length;i++)
+		{
+			for(j=0;j<operationMatrix[0].length;j++)
+				operationMatrix[i][j].initOperation();
+		}
+	}
+	/**
 	 * 计算一条染色体（一个可行的调度）所耗费的最大时间
 	 * @param dna the dna array,an element represents a procedure of a job
 	 * @param length the DNA array length
 	 * @param input the time and order information of the problem
 	 * @return the fitness of a sheduling
 	 */
-	public static int evaluate(int[] dna,ProblemInfo input)
+	public static int evaluate(int[] dna,ProblemInfo input,Operation[][] operationMatrix)
 	{
 		//System.out.println(Arrays.toString(dna));
 		int length=dna.length/2;
 		int dnaLen=dna.length;
 		int jobCount=input.getJobCount();
-		int operCount=input.getMaxOperationCount();
+		initOperationMatrix(operationMatrix);
 		int machineCount=input.getMachineCount();
 		int span = -1;
 		int[] operNoOfEachJob = new int[jobCount];// 工种数
 		int[] machFreeTime = new int[machineCount];// 机器数
-		Operation[][] jobOperMatrix = new Operation[jobCount][operCount];
-		for (int p = 0; p < jobCount; p++)
-			for (int q = 0; q < operCount; q++)
-				jobOperMatrix[p][q] = new Operation();
 		int i = 0;
 		int jobNo = 0;
 		int operNo = 0;
@@ -100,25 +108,25 @@ public class CaculateFitness
 			operationTime=machineNoAndTimeArr[1];
 			if (operNo == 0)
 			{
-				jobOperMatrix[jobNo][operNo].jobNo = jobNo;
-				jobOperMatrix[jobNo][operNo].operationNo = operNo;
-				jobOperMatrix[jobNo][operNo].startTime = machFreeTime[machineNo];
-				jobOperMatrix[jobNo][operNo].endTime = jobOperMatrix[jobNo][operNo].startTime
+				operationMatrix[jobNo][operNo].jobNo = jobNo;
+				operationMatrix[jobNo][operNo].operationNo = operNo;
+				operationMatrix[jobNo][operNo].startTime = machFreeTime[machineNo];
+				operationMatrix[jobNo][operNo].endTime = operationMatrix[jobNo][operNo].startTime
 						+ operationTime;
 			} else
 			{
-				jobOperMatrix[jobNo][operNo].jobNo = jobNo;
-				jobOperMatrix[jobNo][operNo].operationNo = operNo;
-				jobOperMatrix[jobNo][operNo].startTime = UtilLib
-						.max(jobOperMatrix[jobNo][operNo - 1].endTime,
+				operationMatrix[jobNo][operNo].jobNo = jobNo;
+				operationMatrix[jobNo][operNo].operationNo = operNo;
+				operationMatrix[jobNo][operNo].startTime = UtilLib
+						.max(operationMatrix[jobNo][operNo - 1].endTime,
 								machFreeTime[machineNo]);
-				jobOperMatrix[jobNo][operNo].endTime = jobOperMatrix[jobNo][operNo].startTime
+				operationMatrix[jobNo][operNo].endTime = operationMatrix[jobNo][operNo].startTime
 						+ operationTime;
 			}
-			machFreeTime[machineNo] = jobOperMatrix[jobNo][operNo].endTime;
-			if (jobOperMatrix[jobNo][operNo].endTime > span)
+			machFreeTime[machineNo] = operationMatrix[jobNo][operNo].endTime;
+			if (operationMatrix[jobNo][operNo].endTime > span)
 			{
-				span = jobOperMatrix[jobNo][operNo].endTime;
+				span = operationMatrix[jobNo][operNo].endTime;
 			}
 		}
 
@@ -130,12 +138,12 @@ public class CaculateFitness
 	 * @param input:the time and order information of the problem
 	 * @return the fitness of a sheduling
 	 */
-	public static int evaluatePrint(int[] dna, ProblemInfo input)
+	public static int evaluatePrint(int[] dna, ProblemInfo input,Operation[][] operationMatrix)
 	{
+		initOperationMatrix(operationMatrix);
 		int length=dna.length/2;
 		int dnaLen=dna.length;
 		int jobCount=input.getJobCount();
-		int operCount=input.getMaxOperationCount();
 		int machineCount=input.getMachineCount();
 		StringBuilder jobNoBuilder = new StringBuilder();
 		StringBuilder machineNoBuilder = new StringBuilder();
@@ -144,10 +152,6 @@ public class CaculateFitness
 		int span = -1;
 		int[] operNoOfEachJob = new int[jobCount];
 		int[] machFreeTime = new int[machineCount];
-		Operation[][] jobOperMatrix = new Operation[jobCount][operCount];
-		for (int p = 0; p < jobCount; p++)
-			for (int q = 0; q < operCount; q++)
-				jobOperMatrix[p][q] = new Operation();
 		// operation schedule[input->machineCount][input->jobCount];
 		int jobNo = 0;
 		int operNo = 0;
@@ -162,21 +166,21 @@ public class CaculateFitness
 			getMachineNoAndTime(input, dna, jobNo, operNo,machineNoAndTimeArr);
 			machineNo=machineNoAndTimeArr[0];
 			operationTime=machineNoAndTimeArr[1];
-			jobOperMatrix[jobNo][operNo].jobNo = jobNo;
-			jobOperMatrix[jobNo][operNo].operationNo = operNo;
+			operationMatrix[jobNo][operNo].jobNo = jobNo;
+			operationMatrix[jobNo][operNo].operationNo = operNo;
 			if (operNo == 0)
 				start = machFreeTime[machineNo];
 			else
 				start = UtilLib
-						.max(jobOperMatrix[jobNo][operNo - 1].endTime,
+						.max(operationMatrix[jobNo][operNo - 1].endTime,
 								machFreeTime[machineNo]);
-			jobOperMatrix[jobNo][operNo].startTime = start;
+			operationMatrix[jobNo][operNo].startTime = start;
 			end = start+ operationTime;
-			jobOperMatrix[jobNo][operNo].endTime = end;
+			operationMatrix[jobNo][operNo].endTime = end;
 			machFreeTime[machineNo] = end;
-			if (jobOperMatrix[jobNo][operNo].endTime > span)
+			if (operationMatrix[jobNo][operNo].endTime > span)
 			{
-				span = jobOperMatrix[jobNo][operNo].endTime;
+				span = operationMatrix[jobNo][operNo].endTime;
 			}
 			System.out.print("Machine:" + (machineNo + 1) + "|Job:"
 					+ (jobNo + 1) + "|Gongxu:" + (operNo + 1));
@@ -188,8 +192,8 @@ public class CaculateFitness
 			startTimeBuilder.append(start + " ");
 			endTimeBuilder.append(end - start + " ");
 		}
-		printSchedPicInConsole(input,dna, jobOperMatrix);
-		storeToDisk(machineNoBuilder, jobNoBuilder, startTimeBuilder,endTimeBuilder);
+		printSchedPicInConsole(input,dna, operationMatrix);
+		//storeToDisk(machineNoBuilder, jobNoBuilder, startTimeBuilder,endTimeBuilder);
 		return span;
 
 	}
