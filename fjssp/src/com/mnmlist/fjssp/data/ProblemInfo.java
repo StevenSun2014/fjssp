@@ -16,10 +16,10 @@ public class ProblemInfo
 	private int totalOperationCount=0;//the total operation count for the whole job
 	private int[][] operationToIndex;// the index of some operation of some job
 	private double crossoverRate=0.9;//there are 90 percent posibility for an individual to crossover
-	private double mutationRate=0.05;//there are 5 percent posibility for an individual to crossover
-	private int loopCount=50;//to caculate 5 times,one time for 200 crossover or mutation
+	private double mutationRate=0.10;//there are 5 percent posibility for an individual to crossover
+	private int loopCount=20;//to caculate 5 times,one time for 200 crossover or mutation
 	private int populationCount=200;//there are 15 individuals for a generation
-	private int iteratorCount=500;//iterator for 200 time for each loop
+	private int iteratorCount=200;//iterator for 200 time for each loop
 	private int timeLimit=-1;//no time limit
 	private double gsRate=0.6;//global search rate
 	private double lsRate=0.3;//local search rate

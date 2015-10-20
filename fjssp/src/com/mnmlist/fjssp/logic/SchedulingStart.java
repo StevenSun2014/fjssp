@@ -19,7 +19,7 @@ class SchedulingStart
 	 */
 	public static void main(String args[])
 	{
-		File file=new File("testCases/mk01.txt");
+		File file=new File("testCases/Mk01.txt");
 		//get the problem description,such as populationCount,crossoverRate,mutationRate
 		ProblemInfo input=InitProblemDescription.getProblemDesFromFile(file);
 		//get the input parameter ,such as the order,the job

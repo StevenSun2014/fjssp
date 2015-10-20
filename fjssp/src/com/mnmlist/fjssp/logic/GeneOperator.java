@@ -221,21 +221,29 @@ public class GeneOperator
 		// the mutation of the operation sequence
 		int len = dna.length / 2;
 		Random random = new Random();
-		int posa = random.nextInt(len);
-		int posb = random.nextInt(len);
-		while (posa == posb)
-			posb = random.nextInt(len);
-		int temp = 0;
-		if (posa > posb)
+		double posibility=random.nextDouble();
+		if(posibility<0.5)
 		{
-			temp = posa;
-			posa = posb;
-			posb = temp;
+			int posa = random.nextInt(len);
+			int posb = random.nextInt(len);
+			while (posa == posb)
+				posb = random.nextInt(len);
+			int temp = 0;
+			if (posa > posb)
+			{
+				temp = posa;
+				posa = posb;
+				posb = temp;
+			}
+			operSeqMutation(dna, posa + len, posb + len);
+		}else
+		{
+			// the mutation of the machine sequence
+			int posa = random.nextInt(len);
+			machineSeqMutation(dna, input, posa);
 		}
-		operSeqMutation(dna, posa + len, posb + len);
-		// the mutation of the machine sequence
-		posa = random.nextInt(len);
-		machineSeqMutation(dna, input, posa);
+		
+		
 	}
 
 	/**
