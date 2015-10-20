@@ -25,7 +25,7 @@ public class InitProblemDescription
 {
 	public static void main(String args[])
 	{
-		File file=new File("mk01.txt");
+		File file=new File("testCases/mk01.txt");
 		InitProblemDescription.getProblemDesFromFile(file);
 	}
 	/**
