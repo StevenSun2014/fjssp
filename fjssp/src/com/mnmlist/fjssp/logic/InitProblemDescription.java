@@ -92,8 +92,7 @@ public class InitProblemDescription
 						for (int m = 0; m < selectedMachineCount; m++)
 						{
 							machineNo = Integer.valueOf(opeationDesArr[k++]);
-							operationTime = Integer
-									.valueOf(opeationDesArr[k++]);
+							operationTime = Integer.valueOf(opeationDesArr[k++]);
 							proDesMatrix[operationTotalIndex][machineNo - 1] = operationTime;
 						}
 						// 存储每个工序的备选机器数目

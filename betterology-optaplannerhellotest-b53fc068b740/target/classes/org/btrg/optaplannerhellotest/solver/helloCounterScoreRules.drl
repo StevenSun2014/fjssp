@@ -1,0 +1,28 @@
+
+
+package org.btrg.optaplannerhellotest.solver;
+    dialect "java"
+
+import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScoreHolder;
+import org.btrg.optaplannerhellotest.domain.HelloEntity;
+
+global HardSoftScoreHolder scoreHolder;
+
+// ############################################################################
+// Hard constraints
+// ############################################################################
+
+
+rule "notEnoughHellos"
+    when
+        $hello : HelloEntity(count < 5, $count : count)
+    then
+        scoreHolder.addHardConstraintMatch(kcontext, -1);
+end
+
+rule "tooManyEnoughHellos"
+    when
+        $hello : HelloEntity(count > 5, $count : count)
+    then
+        scoreHolder.addHardConstraintMatch(kcontext, -1);
+end

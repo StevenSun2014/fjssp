@@ -102,11 +102,14 @@ public class FlexibleJobShop
 		double[] allProbabilities = new double[allLength];
 		int[] perSelectCount = new int[allLength];
 		int[][] newDnaMatrix = new int[allLength][dnaLength];
+		int []currentBestDna=new int[dnaLength];
+		System.arraycopy(bestChromosome, 0, currentBestDna, 0, dnaLength);
 		while (!UtilLib.isEnd(input, count, startTime))
 		{
 			// copy parent generation to new generation
-			System.arraycopy(bestChromosome, 0, newDnaMatrix[0], 0, dnaLength);
-			for (i = 1; i < populationCount; i++)
+			System.arraycopy(currentBestDna, 0, newDnaMatrix[0], 0, dnaLength);
+			System.arraycopy(bestChromosome, 0, newDnaMatrix[1], 0, dnaLength);
+			for (i = 2; i < populationCount; i++)
 				System.arraycopy(dnaMatrix[i], 0, newDnaMatrix[i], 0, dnaLength);
 			// gene Crossover,copy new born individual to new generation
 			for (i = 0; i < crossCount; i += 2)
@@ -144,6 +147,7 @@ public class FlexibleJobShop
 				minFitness = latestMinFitness;
 				minIndex = latestMinIndex;
 			}
+			System.arraycopy(newDnaMatrix[latestMinIndex], 0, currentBestDna, 0, dnaLength);
 			//select individuals of the next generation
 			Arrays.fill(allProbabilities, 0);
 			Selection.transformFitnessToDistribution(allFitness,allProbabilities);

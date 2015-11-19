@@ -193,7 +193,7 @@ public class CaculateFitness
 			endTimeBuilder.append(end - start + " ");
 		}
 		printSchedPicInConsole(input,dna, operationMatrix);
-		//storeToDisk(machineNoBuilder, jobNoBuilder, startTimeBuilder,endTimeBuilder);
+		storeToDisk(machineNoBuilder, jobNoBuilder, startTimeBuilder,endTimeBuilder);
 		return span;
 
 	}
@@ -213,10 +213,10 @@ public class CaculateFitness
 		try
 		{
 			fw = new FileWriter(file);
-			fw.write(machineNoBuilder.toString() + "\r\n");
-			fw.write(jobNoBuilder.toString() + "\r\n");
-			fw.write(startTimeBuilder.toString() + "\r\n");
-			fw.write(endTimeBuilder.toString() + "\r\n");
+			fw.write("工序号(颜色):"+jobNoBuilder.toString() + "\r\n");
+			fw.write("机器号(y轴):"+machineNoBuilder.toString() + "\r\n");
+			fw.write("开始时间(x轴):"+startTimeBuilder.toString() + "\r\n");
+			fw.write("持续时间(x轴方向距离):"+endTimeBuilder.toString() + "\r\n");
 			fw.close();
 		} catch (IOException e)
 		{

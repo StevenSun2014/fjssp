@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<solver>
+	<solutionClass>org.btrg.optaplannerhellotest.domain.HelloSolution</solutionClass>
+	<entityClass>org.btrg.optaplannerhellotest.domain.HelloEntity</entityClass>
+	<scoreDirectorFactory>
+		<scoreDefinitionType>HARD_SOFT</scoreDefinitionType>
+		<scoreDrl>org/btrg/optaplannerhellotest/solver/helloCounterScoreRules.drl</scoreDrl>
+	</scoreDirectorFactory>
+	<localSearch>
+		<termination>
+			<secondsSpentLimit>1</secondsSpentLimit>
+			<!-- <bestScoreLimit>0hard/0soft</bestScoreLimit> -->
+		</termination>
+		<acceptor>
+			<entityTabuSize>7</entityTabuSize>
+		</acceptor>
+		<forager>
+			<acceptedCountLimit>1000</acceptedCountLimit>
+		</forager>
+	</localSearch>
+</solver>
